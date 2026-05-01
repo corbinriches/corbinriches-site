@@ -1,11 +1,101 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const featuredProjects = [
+	{
+		title: 'Quantum dot Schrödinger/QCSE solver',
+		description:
+			'A scientific computing project for modeling confined quantum states and field-dependent behavior in semiconductor nanostructures.',
+		tags: ['quantum dots', 'simulation', 'Python'],
+		status: 'featured project',
+		href: '/projects/',
+	},
+	{
+		title: 'Hyperloop design team',
+		description:
+			'Hands-on engineering work across analysis, documentation, prototyping, and the practical tradeoffs of student design teams.',
+		tags: ['design', 'teamwork', 'testing'],
+		status: 'team project',
+		href: '/projects/',
+	},
+	{
+		title: 'Cryogenics and detector lab interests',
+		description:
+			'An active interest area around low-temperature systems, measurement, instrumentation, and detector-adjacent lab work.',
+		tags: ['cryogenics', 'detectors', 'lab'],
+		status: 'research interests',
+		href: '/projects/',
+	},
+	{
+		title: 'Engineering work experience',
+		description:
+			'Industry and technical work experience that ties together problem solving, communication, and reliable execution.',
+		tags: ['engineering', 'documentation', 'operations'],
+		status: 'experience',
+		href: '/about/',
+	},
+];
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="Corbin Riches">
+	<section class="hero">
+		<p class="eyebrow">personal site / digital portfolio</p>
+		<h1>Corbin Riches</h1>
+		<p class="hero-subtitle">Engineering Physics · Photonics · Cryogenics · Simulation</p>
+		<p class="hero-copy">
+			I am an Engineering Physics student building a portfolio around photonics, quantum dots,
+			cryogenic systems, scientific computing, simulation, and technical writing. This site is
+			a home base for projects, notes, experiments, and the occasional carefully organized
+			deep dive.
+		</p>
+		<div class="hero-actions" aria-label="Primary links">
+			<a class="button" href="/projects/">View projects</a>
+			<a class="button secondary" href="/contact/">Contact</a>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="section-heading">
+			<p class="eyebrow">selected signals</p>
+			<h2>Featured Work</h2>
+		</div>
+		<div class="card-grid">
+			{
+				featuredProjects.map((project) => (
+					<ProjectCard
+						title={project.title}
+						description={project.description}
+						tags={project.tags}
+						status={project.status}
+						href={project.href}
+					/>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="section two-column">
+		<div>
+			<p class="eyebrow">now</p>
+			<h2>Currently Working On</h2>
+			<p>
+				Building out this website, refining project writeups, and keeping a sharper record of
+				simulation work, lab interests, useful books, and technical notes.
+			</p>
+		</div>
+		<div class="terminal-card" aria-label="Current focus list">
+			<p><span>01</span> Quantum dot modeling notes</p>
+			<p><span>02</span> Portfolio project summaries</p>
+			<p><span>03</span> Reading list and bookshelf entries</p>
+		</div>
+	</section>
+
+	<section class="section link-panel">
+		<a href="/about/">About</a>
+		<a href="/projects/">Projects</a>
+		<a href="/blog/">Blog</a>
+		<a href="/bookshelf/">Bookshelf</a>
+		<a href="/contact/">Contact</a>
+	</section>
 </Layout>

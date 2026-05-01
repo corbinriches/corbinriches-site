@@ -1,0 +1,61 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+
+const projects = [
+	{
+		title: 'Quantum dot Schrödinger/QCSE solver',
+		description:
+			'A modeling project for studying confined energy states and electric-field effects in quantum dot structures.',
+		tags: ['quantum dots', 'Schrödinger equation', 'QCSE', 'simulation'],
+		status: 'scientific computing',
+	},
+	{
+		title: 'Hyperloop design team',
+		description:
+			'Student design work involving engineering tradeoffs, documentation, analysis, and team execution.',
+		tags: ['student design', 'systems', 'testing'],
+		status: 'team engineering',
+	},
+	{
+		title: 'Cryogenics and detector lab interests',
+		description:
+			'A developing project area for low-temperature instrumentation, measurement, and detector-adjacent lab skills.',
+		tags: ['cryogenics', 'instrumentation', 'detectors'],
+		status: 'lab interests',
+	},
+	{
+		title: 'Engineering work experience',
+		description:
+			'A place for concise summaries of engineering work, technical communication, and practical problem solving.',
+		tags: ['work experience', 'documentation', 'engineering'],
+		status: 'experience',
+	},
+];
+---
+
+<Layout title="Projects" description="Selected projects and engineering work by Corbin Riches.">
+	<section class="page-header">
+		<p class="eyebrow">projects</p>
+		<h1>Selected technical work, notes, and build logs.</h1>
+		<p>
+			A first pass at the portfolio. These cards are intentionally compact for now, with room
+			to grow into deeper project pages as the writeups mature.
+		</p>
+	</section>
+
+	<section class="section">
+		<div class="card-grid">
+			{
+				projects.map((project) => (
+					<ProjectCard
+						title={project.title}
+						description={project.description}
+						tags={project.tags}
+						status={project.status}
+					/>
+				))
+			}
+		</div>
+	</section>
+</Layout>

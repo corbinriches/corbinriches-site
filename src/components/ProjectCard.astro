@@ -1,0 +1,18 @@
+---
+const { title, description, tags = [], status = '', href = '' } = Astro.props;
+---
+
+<article class="project-card">
+	{status && <p class="eyebrow">{status}</p>}
+	<h3>{href ? <a href={href}>{title}</a> : title}</h3>
+	<p>{description}</p>
+	{
+		tags.length > 0 && (
+			<ul class="tag-list" aria-label={`${title} topics`}>
+				{tags.map((tag) => (
+					<li>{tag}</li>
+				))}
+			</ul>
+		)
+	}
+</article>

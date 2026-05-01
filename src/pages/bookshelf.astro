@@ -1,0 +1,43 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const shelves = [
+	{
+		title: 'Physics and Photonics',
+		description: 'Texts and references for optics, semiconductor physics, and quantum mechanics.',
+	},
+	{
+		title: 'Computation',
+		description: 'Numerical methods, scientific Python, visualization, and simulation practice.',
+	},
+	{
+		title: 'Writing and Systems',
+		description: 'Books that sharpen explanation, engineering judgment, and technical taste.',
+	},
+];
+---
+
+<Layout title="Bookshelf" description="Books and references Corbin Riches is reading or recommending.">
+	<section class="page-header">
+		<p class="eyebrow">bookshelf</p>
+		<h1>Reading list, references, and future notes.</h1>
+		<p>
+			A simple shelf for books, papers, manuals, and references that shape the work. This will
+			become more useful as titles and short notes are added.
+		</p>
+	</section>
+
+	<section class="section">
+		<div class="card-grid">
+			{
+				shelves.map((shelf) => (
+					<article class="project-card">
+						<p class="eyebrow">shelf</p>
+						<h3>{shelf.title}</h3>
+						<p>{shelf.description}</p>
+					</article>
+				))
+			}
+		</div>
+	</section>
+</Layout>

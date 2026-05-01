@@ -1,0 +1,33 @@
+---
+const navItems = [
+	{ href: '/', label: 'Home' },
+	{ href: '/about/', label: 'About' },
+	{ href: '/projects/', label: 'Projects' },
+	{ href: '/blog/', label: 'Blog' },
+	{ href: '/bookshelf/', label: 'Bookshelf' },
+	{ href: '/contact/', label: 'Contact' },
+];
+
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
+
+const isActive = (href) => {
+	const normalizedHref = href === '/' ? '/' : href.replace(/\/$/, '');
+	return currentPath === normalizedHref;
+};
+---
+
+<header class="site-header">
+	<a class="brand" href="/" aria-label="Corbin Riches home">
+		<span class="brand-mark">CR</span>
+		<span class="brand-text">corbinriches.com</span>
+	</a>
+	<nav class="site-nav" aria-label="Primary navigation">
+		{
+			navItems.map((item) => (
+				<a class:list={['nav-link', { active: isActive(item.href) }]} href={item.href}>
+					{item.label}
+				</a>
+			))
+		}
+	</nav>
+</header>
