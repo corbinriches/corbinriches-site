@@ -1,0 +1,67 @@
+<article class="home-module interactive-module coin-module" data-coin-toss>
+	<p class="eyebrow">coin_toss.exe</p>
+	<h3>Coin Toss</h3>
+	<p>A tiny local decision machine. Counts live in this browser only.</p>
+
+	<div class="coin-readout" aria-live="polite">
+		<span>latest:</span>
+		<strong data-coin-result>not flipped yet</strong>
+	</div>
+
+	<div class="coin-counts" aria-label="Coin toss counts">
+		<p><span>heads</span> <strong data-heads-count>0</strong></p>
+		<p><span>tails</span> <strong data-tails-count>0</strong></p>
+	</div>
+
+	<button class="button" type="button" data-flip-button>Flip</button>
+</article>
+
+<script is:inline>
+	(() => {
+		const panel = document.querySelector('[data-coin-toss]');
+		if (!panel) return;
+
+		const storageKey = 'corbin-coin-toss';
+		const resultEl = panel.querySelector('[data-coin-result]');
+		const headsEl = panel.querySelector('[data-heads-count]');
+		const tailsEl = panel.querySelector('[data-tails-count]');
+		const flipButton = panel.querySelector('[data-flip-button]');
+
+		const readState = () => {
+			try {
+				return JSON.parse(localStorage.getItem(storageKey)) || { heads: 0, tails: 0, latest: '' };
+			} catch {
+				return { heads: 0, tails: 0, latest: '' };
+			}
+		};
+
+		const writeState = (state) => {
+			try {
+				localStorage.setItem(storageKey, JSON.stringify(state));
+			} catch {
+				/* Current-page interaction still works when storage is unavailable. */
+			}
+		};
+
+		const render = (state) => {
+			resultEl.textContent = state.latest || 'not flipped yet';
+			headsEl.textContent = state.heads;
+			tailsEl.textContent = state.tails;
+		};
+
+		let state = readState();
+		render(state);
+
+		flipButton.addEventListener('click', () => {
+			const latest = Math.random() < 0.5 ? 'Heads' : 'Tails';
+			state = {
+				heads: state.heads + (latest === 'Heads' ? 1 : 0),
+				tails: state.tails + (latest === 'Tails' ? 1 : 0),
+				latest,
+			};
+
+			writeState(state);
+			render(state);
+		});
+	})();
+</script>

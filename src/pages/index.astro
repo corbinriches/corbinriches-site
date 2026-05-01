@@ -1,6 +1,10 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import AsciiPortrait from '../components/AsciiPortrait.astro';
+import CoinToss from '../components/CoinToss.astro';
+import Guestbook from '../components/Guestbook.astro';
 import ProjectCard from '../components/ProjectCard.astro';
+import UpdatesPanel from '../components/UpdatesPanel.astro';
 
 const featuredProjects = [
 	{
@@ -37,7 +41,7 @@ const featuredProjects = [
 	},
 ];
 
-const homeModules = [
+const noteModules = [
 	{
 		label: 'blog/recent posts',
 		title: 'Recent notes',
@@ -46,24 +50,9 @@ const homeModules = [
 		linkText: 'open notebook',
 	},
 	{
-		label: 'guestbook',
-		title: 'Guestbook',
-		body: 'Old-web guestbook space. Maybe a static note wall later, maybe just a strange little archive.',
-	},
-	{
-		label: 'newsletter/update',
-		title: 'Updates',
-		body: 'A future place for quiet project updates. No signup machinery yet; static site first.',
-	},
-	{
-		label: 'coin_toss.exe',
-		title: 'Coin Toss',
-		body: 'Placeholder for a tiny interactive decision machine: heads, tails, or ask the lab notebook.',
-	},
-	{
 		label: 'hidden note',
 		title: 'Easter Egg',
-		body: 'A reserved panel for a hidden note, keyboard thing, or small personal artifact.',
+		body: 'A reserved panel for a hidden note, keyboard thing, or small personal artifact. Nothing to see here yet.',
 	},
 	{
 		label: 'ascii scraps',
@@ -71,21 +60,6 @@ const homeModules = [
 		body: 'Replace this with a diagram, portrait, circuit doodle, or other handmade text object.',
 	},
 ];
-
-const asciiBlock = String.raw`
-+------------------------------+
-|          CORBIN RICHES       |
-|                              |
-|   eng physics / photonics    |
-|   quantum dots / cryo / sim  |
-|                              |
-|        [ ascii portrait ]    |
-|        [ replace later  ]    |
-+------------------------------+
-       ||              ||
-       ||   notes in   ||
-       ||   progress   ||
-`.trim();
 ---
 
 <Layout title="Corbin Riches">
@@ -107,9 +81,13 @@ const asciiBlock = String.raw`
 			</div>
 		</div>
 
-		<aside class="ascii-panel" aria-label="Replaceable ASCII portrait placeholder">
-			<pre>{asciiBlock}</pre>
-		</aside>
+		<AsciiPortrait />
+	</section>
+
+	<section class="section module-grid personal-widgets" aria-label="Personal homepage widgets">
+		<CoinToss />
+		<Guestbook />
+		<UpdatesPanel />
 	</section>
 
 	<section class="section">
@@ -139,7 +117,7 @@ const asciiBlock = String.raw`
 		</div>
 		<div class="module-grid">
 			{
-				homeModules.map((module) => (
+				noteModules.map((module) => (
 					<article class="home-module">
 						<p class="eyebrow">{module.label}</p>
 						<h3>{module.title}</h3>

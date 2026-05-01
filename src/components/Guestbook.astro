@@ -1,0 +1,83 @@
+<article class="home-module interactive-module guestbook-module" data-guestbook>
+	<p class="eyebrow">guestbook.local</p>
+	<h3>Guestbook</h3>
+	<p>Early local-only version. Entries save in this browser, not on the internet.</p>
+
+	<form class="guestbook-form" data-guestbook-form>
+		<label>
+			name
+			<input name="name" autocomplete="name" maxlength="32" required />
+		</label>
+		<label>
+			message
+			<textarea name="message" rows="3" maxlength="160" required></textarea>
+		</label>
+		<button class="button" type="submit">sign locally</button>
+	</form>
+
+	<ul class="guestbook-entries" data-guestbook-entries aria-label="Local guestbook entries"></ul>
+</article>
+
+<script is:inline>
+	(() => {
+		const panel = document.querySelector('[data-guestbook]');
+		if (!panel) return;
+
+		const storageKey = 'corbin-guestbook';
+		const form = panel.querySelector('[data-guestbook-form]');
+		const list = panel.querySelector('[data-guestbook-entries]');
+		const starterEntries = [
+			{ name: 'site', message: 'guestbook placeholder initialized.' },
+			{ name: 'future visitor', message: 'this will eventually be more real.' },
+		];
+
+		const readEntries = () => {
+			try {
+				return JSON.parse(localStorage.getItem(storageKey)) || starterEntries;
+			} catch {
+				return starterEntries;
+			}
+		};
+
+		const writeEntries = (entries) => {
+			try {
+				localStorage.setItem(storageKey, JSON.stringify(entries));
+			} catch {
+				/* The visible list can still update without storage. */
+			}
+		};
+
+		const renderEntries = (entries) => {
+			list.replaceChildren();
+
+			entries.slice(0, 5).forEach((entry) => {
+				const item = document.createElement('li');
+				const name = document.createElement('strong');
+				const message = document.createElement('span');
+
+				name.textContent = entry.name;
+				message.textContent = entry.message;
+				item.append(name, ' / ', message);
+				list.append(item);
+			});
+		};
+
+		let entries = readEntries();
+		renderEntries(entries);
+
+		form.addEventListener('submit', (event) => {
+			event.preventDefault();
+
+			const formData = new FormData(form);
+			const name = String(formData.get('name') || '').trim();
+			const message = String(formData.get('message') || '').trim();
+
+			if (!name || !message) return;
+
+			entries = [{ name, message }, ...entries].slice(0, 5);
+			writeEntries(entries);
+			renderEntries(entries);
+			form.reset();
+		});
+	})();
+</script>
