@@ -16,6 +16,16 @@ const pageTitle = title === 'Corbin Riches' ? title : `${title} | Corbin Riches`
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<script is:inline>
+			(() => {
+				try {
+					const savedTheme = localStorage.getItem('corbin-theme');
+					document.documentElement.dataset.theme = savedTheme === 'dark' ? 'dark' : 'light';
+				} catch {
+					document.documentElement.dataset.theme = 'light';
+				}
+			})();
+		</script>
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="description" content={description} />
 		<meta name="generator" content={Astro.generator} />

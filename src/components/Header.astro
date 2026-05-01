@@ -21,13 +21,53 @@ const isActive = (href) => {
 		<span class="brand-mark">CR</span>
 		<span class="brand-text">corbinriches.com</span>
 	</a>
-	<nav class="site-nav" aria-label="Primary navigation">
-		{
-			navItems.map((item) => (
-				<a class:list={['nav-link', { active: isActive(item.href) }]} href={item.href}>
-					{item.label}
-				</a>
-			))
-		}
-	</nav>
+	<div class="header-tools">
+		<nav class="site-nav" aria-label="Primary navigation">
+			{
+				navItems.map((item) => (
+					<a class:list={['nav-link', { active: isActive(item.href) }]} href={item.href}>
+						{item.label}
+					</a>
+				))
+			}
+		</nav>
+		<button class="theme-toggle" type="button" aria-label="Switch to charcoal theme" aria-pressed="false" data-theme-toggle>
+			<span data-theme-label>tan</span>
+		</button>
+	</div>
 </header>
+
+<script is:inline>
+	(() => {
+		const storageKey = 'corbin-theme';
+		const button = document.querySelector('[data-theme-toggle]');
+		const label = document.querySelector('[data-theme-label]');
+
+		const setTheme = (theme) => {
+			const isDark = theme === 'dark';
+			document.documentElement.dataset.theme = isDark ? 'dark' : 'light';
+
+			if (button) {
+				button.setAttribute('aria-pressed', String(isDark));
+				button.setAttribute('aria-label', isDark ? 'Switch to tan theme' : 'Switch to charcoal theme');
+			}
+
+			if (label) {
+				label.textContent = isDark ? 'charcoal' : 'tan';
+			}
+		};
+
+		setTheme(document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light');
+
+		button?.addEventListener('click', () => {
+			const nextTheme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+			setTheme(nextTheme);
+
+			try {
+				localStorage.setItem(storageKey, nextTheme);
+			} catch {
+				/* The toggle should still work for the current page when storage is unavailable. */
+			}
+		});
+	})();
+</script>

@@ -4,11 +4,11 @@ import ProjectCard from '../components/ProjectCard.astro';
 
 const featuredProjects = [
 	{
-		title: 'Quantum dot Schrödinger/QCSE solver',
+		title: 'Quantum dot Schrodinger/QCSE solver',
 		description:
 			'A scientific computing project for modeling confined quantum states and field-dependent behavior in semiconductor nanostructures.',
 		tags: ['quantum dots', 'simulation', 'Python'],
-		status: 'featured project',
+		status: 'portfolio',
 		href: '/projects/',
 	},
 	{
@@ -24,7 +24,7 @@ const featuredProjects = [
 		description:
 			'An active interest area around low-temperature systems, measurement, instrumentation, and detector-adjacent lab work.',
 		tags: ['cryogenics', 'detectors', 'lab'],
-		status: 'research interests',
+		status: 'lab notes',
 		href: '/projects/',
 	},
 	{
@@ -36,29 +36,86 @@ const featuredProjects = [
 		href: '/about/',
 	},
 ];
+
+const homeModules = [
+	{
+		label: 'blog/recent posts',
+		title: 'Recent notes',
+		body: 'Placeholder for short technical notes, course-adjacent thoughts, build logs, and useful references.',
+		href: '/blog/',
+		linkText: 'open notebook',
+	},
+	{
+		label: 'guestbook',
+		title: 'Guestbook',
+		body: 'Old-web guestbook space. Maybe a static note wall later, maybe just a strange little archive.',
+	},
+	{
+		label: 'newsletter/update',
+		title: 'Updates',
+		body: 'A future place for quiet project updates. No signup machinery yet; static site first.',
+	},
+	{
+		label: 'coin_toss.exe',
+		title: 'Coin Toss',
+		body: 'Placeholder for a tiny interactive decision machine: heads, tails, or ask the lab notebook.',
+	},
+	{
+		label: 'hidden note',
+		title: 'Easter Egg',
+		body: 'A reserved panel for a hidden note, keyboard thing, or small personal artifact.',
+	},
+	{
+		label: 'ascii scraps',
+		title: 'ASCII Area',
+		body: 'Replace this with a diagram, portrait, circuit doodle, or other handmade text object.',
+	},
+];
+
+const asciiBlock = String.raw`
++------------------------------+
+|          CORBIN RICHES       |
+|                              |
+|   eng physics / photonics    |
+|   quantum dots / cryo / sim  |
+|                              |
+|        [ ascii portrait ]    |
+|        [ replace later  ]    |
++------------------------------+
+       ||              ||
+       ||   notes in   ||
+       ||   progress   ||
+`.trim();
 ---
 
 <Layout title="Corbin Riches">
-	<section class="hero">
-		<p class="eyebrow">personal site / digital portfolio</p>
-		<h1>Corbin Riches</h1>
-		<p class="hero-subtitle">Engineering Physics · Photonics · Cryogenics · Simulation</p>
-		<p class="hero-copy">
-			I am an Engineering Physics student building a portfolio around photonics, quantum dots,
-			cryogenic systems, scientific computing, simulation, and technical writing. This site is
-			a home base for projects, notes, experiments, and the occasional carefully organized
-			deep dive.
-		</p>
-		<div class="hero-actions" aria-label="Primary links">
-			<a class="button" href="/projects/">View projects</a>
-			<a class="button secondary" href="/contact/">Contact</a>
+	<section class="home-board">
+		<div class="hero">
+			<p class="eyebrow">personal homepage / digital portfolio</p>
+			<h1>Corbin Riches</h1>
+			<p class="hero-subtitle">Engineering Physics / Photonics / Cryogenics / Simulation</p>
+			<p class="hero-copy">
+				I am an Engineering Physics student building a portfolio around photonics, quantum
+				dots, cryogenic systems, scientific computing, simulation, and technical writing.
+				This site is a home base for projects, notes, experiments, and the occasional
+				carefully organized deep dive.
+			</p>
+			<div class="hero-actions" aria-label="Primary links">
+				<a class="button primary" href="/projects/">projects</a>
+				<a class="button" href="/blog/">notes</a>
+				<a class="button" href="/contact/">contact</a>
+			</div>
 		</div>
+
+		<aside class="ascii-panel" aria-label="Replaceable ASCII portrait placeholder">
+			<pre>{asciiBlock}</pre>
+		</aside>
 	</section>
 
 	<section class="section">
 		<div class="section-heading">
-			<p class="eyebrow">selected signals</p>
-			<h2>Featured Work</h2>
+			<p class="eyebrow">portfolio/projects</p>
+			<h2>Things to expand</h2>
 		</div>
 		<div class="card-grid">
 			{
@@ -75,10 +132,33 @@ const featuredProjects = [
 		</div>
 	</section>
 
+	<section class="section">
+		<div class="section-heading">
+			<p class="eyebrow">homepage modules</p>
+			<h2>Loose ends</h2>
+		</div>
+		<div class="module-grid">
+			{
+				homeModules.map((module) => (
+					<article class="home-module">
+						<p class="eyebrow">{module.label}</p>
+						<h3>{module.title}</h3>
+						<p>{module.body}</p>
+						{module.href && (
+							<a class="module-link" href={module.href}>
+								{module.linkText}
+							</a>
+						)}
+					</article>
+				))
+			}
+		</div>
+	</section>
+
 	<section class="section two-column">
 		<div>
 			<p class="eyebrow">now</p>
-			<h2>Currently Working On</h2>
+			<h2>Currently working on</h2>
 			<p>
 				Building out this website, refining project writeups, and keeping a sharper record of
 				simulation work, lab interests, useful books, and technical notes.
@@ -91,7 +171,7 @@ const featuredProjects = [
 		</div>
 	</section>
 
-	<section class="section link-panel">
+	<section class="section link-panel" aria-label="Site map">
 		<a href="/about/">About</a>
 		<a href="/projects/">Projects</a>
 		<a href="/blog/">Blog</a>
