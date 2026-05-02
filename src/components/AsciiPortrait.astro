@@ -1,29 +1,16 @@
 ---
+import portraitHero from '../ascii/portrait-hero.txt?raw';
+
 const {
-	label = 'ascii portrait',
-	caption = 'placeholder portrait block / replace me later',
-	art = String.raw`
-+--------------------------------+
-|          CORBIN RICHES         |
-|                                |
-|      .------------------.      |
-|      |  eng physics     |      |
-|      |  photonics       |      |
-|      |  cryo / sim      |      |
-|      '------------------'      |
-|                                |
-|          [ ascii face ]        |
-|          [ goes here  ]        |
-+--------------------------------+
-       /|                |\
-      /_|  notes, labs   |_\
-        |  projects      |
-        '----------------'
-`.trim(),
+	label = 'ascii self portrait',
+	caption = 'ascii self portrait / work in progress',
+	art = portraitHero,
 } = Astro.props;
 ---
 
 <figure class="ascii-panel ascii-portrait" aria-label={label}>
-	<pre>{art}</pre>
+	<div class="ascii-portrait-display">
+		<pre class="ascii-portrait-art" tabindex="0">{art}</pre>
+	</div>
 	<figcaption>{caption}</figcaption>
 </figure>

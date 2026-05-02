@@ -3,15 +3,33 @@
 	<h3>Coin Toss</h3>
 	<p>A tiny local decision machine. Counts live in this browser only.</p>
 
+	<div class="coin-flip-stage" aria-live="polite">
+		<pre class="coin-frame" data-coin-frame>[?]</pre>
+	</div>
+
 	<div class="coin-readout" aria-live="polite">
 		<span>latest:</span>
 		<strong data-coin-result>not flipped yet</strong>
+	</div>
+
+	<div class="coin-ratio" aria-label="Heads to tails ratio">
+		<div class="coin-ratio-labels">
+			<span>heads</span>
+			<span>tails</span>
+		</div>
+		<pre class="coin-ratio-bar" data-ratio-bar>[------------------]</pre>
+		<div class="coin-ratio-counts">
+			<strong data-ratio-heads>0</strong>
+			<strong data-ratio-tails>0</strong>
+		</div>
 	</div>
 
 	<div class="coin-counts" aria-label="Coin toss counts">
 		<p><span>heads</span> <strong data-heads-count>0</strong></p>
 		<p><span>tails</span> <strong data-tails-count>0</strong></p>
 	</div>
+
+	<p class="coin-streak" data-coin-streak>streak: none</p>
 
 	<button class="button" type="button" data-flip-button>Flip</button>
 </article>
@@ -25,13 +43,28 @@
 		const resultEl = panel.querySelector('[data-coin-result]');
 		const headsEl = panel.querySelector('[data-heads-count]');
 		const tailsEl = panel.querySelector('[data-tails-count]');
+		const ratioHeadsEl = panel.querySelector('[data-ratio-heads]');
+		const ratioTailsEl = panel.querySelector('[data-ratio-tails]');
+		const ratioBarEl = panel.querySelector('[data-ratio-bar]');
+		const frameEl = panel.querySelector('[data-coin-frame]');
+		const streakEl = panel.querySelector('[data-coin-streak]');
 		const flipButton = panel.querySelector('[data-flip-button]');
+		const fallbackRatioSegments = 28;
+		const flipFrames = ['[ ]', '[|]', '[/]', '[-]', '[\\\\]', '[|]', '[/]', '[-]', '[?]'];
+
+		const normalizeState = (savedState) => ({
+			heads: Number(savedState?.heads) || 0,
+			tails: Number(savedState?.tails) || 0,
+			latest: typeof savedState?.latest === 'string' ? savedState.latest : '',
+			streakResult: typeof savedState?.streakResult === 'string' ? savedState.streakResult : '',
+			streakCount: Number(savedState?.streakCount) || 0,
+		});
 
 		const readState = () => {
 			try {
-				return JSON.parse(localStorage.getItem(storageKey)) || { heads: 0, tails: 0, latest: '' };
+				return normalizeState(JSON.parse(localStorage.getItem(storageKey)) || {});
 			} catch {
-				return { heads: 0, tails: 0, latest: '' };
+				return normalizeState({});
 			}
 		};
 
@@ -43,25 +76,87 @@
 			}
 		};
 
+		const getRatioSegments = () => {
+			const styles = window.getComputedStyle(ratioBarEl);
+			const font = `${styles.fontSize} ${styles.fontFamily}`;
+			const measure = document.createElement('span');
+
+			measure.textContent = '#';
+			measure.style.font = font;
+			measure.style.position = 'absolute';
+			measure.style.visibility = 'hidden';
+			measure.style.whiteSpace = 'pre';
+			document.body.append(measure);
+
+			const charWidth = measure.getBoundingClientRect().width || 8;
+			measure.remove();
+
+			const horizontalPadding = Number.parseFloat(styles.paddingLeft) + Number.parseFloat(styles.paddingRight);
+			const availableWidth = ratioBarEl.clientWidth - horizontalPadding;
+			const measuredSegments = Math.floor(availableWidth / charWidth) - 2;
+
+			return Math.max(18, measuredSegments || fallbackRatioSegments);
+		};
+
 		const render = (state) => {
 			resultEl.textContent = state.latest || 'not flipped yet';
 			headsEl.textContent = state.heads;
 			tailsEl.textContent = state.tails;
+			ratioHeadsEl.textContent = state.heads;
+			ratioTailsEl.textContent = state.tails;
+			frameEl.textContent = state.latest ? `[${state.latest[0]}]` : '[?]';
+			streakEl.textContent = state.streakCount > 1 ? `streak: ${state.streakResult.toLowerCase()} x${state.streakCount}` : 'streak: none';
+
+			const total = state.heads + state.tails;
+			const ratioSegments = getRatioSegments();
+			const headsSegments = total > 0 ? Math.round((state.heads / total) * ratioSegments) : 0;
+			const tailsSegments = ratioSegments - headsSegments;
+			ratioBarEl.textContent = `[${'#'.repeat(headsSegments)}${'-'.repeat(tailsSegments)}]`;
 		};
 
 		let state = readState();
 		render(state);
 
-		flipButton.addEventListener('click', () => {
+		if ('ResizeObserver' in window) {
+			const ratioObserver = new ResizeObserver(() => render(state));
+			ratioObserver.observe(ratioBarEl);
+		}
+
+		const playAnimation = (finalResult) =>
+			new Promise((resolve) => {
+				let frameIndex = 0;
+				flipButton.disabled = true;
+
+				const timer = window.setInterval(() => {
+					frameEl.textContent = flipFrames[frameIndex % flipFrames.length];
+					frameIndex += 1;
+
+					if (frameIndex >= flipFrames.length) {
+						window.clearInterval(timer);
+						frameEl.textContent = `[${finalResult[0]}]`;
+						resolve();
+					}
+				}, 80);
+			});
+
+		flipButton.addEventListener('click', async () => {
+			if (flipButton.disabled) return;
+
 			const latest = Math.random() < 0.5 ? 'Heads' : 'Tails';
+			await playAnimation(latest);
+
+			const streakCount = state.latest === latest ? state.streakCount + 1 : 1;
 			state = {
 				heads: state.heads + (latest === 'Heads' ? 1 : 0),
 				tails: state.tails + (latest === 'Tails' ? 1 : 0),
 				latest,
+				streakResult: latest,
+				streakCount,
 			};
 
 			writeState(state);
 			render(state);
+			flipButton.disabled = false;
 		});
 	})();
 </script>
