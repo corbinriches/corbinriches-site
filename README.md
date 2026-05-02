@@ -1,46 +1,64 @@
-# Astro Starter Kit: Basics
+# corbinriches.com
 
-```sh
-npm create astro@latest -- --template basics
+Static Astro personal website and digital portfolio.
+
+## Blog Posts
+
+Blog posts live in `src/content/blog/` as Markdown files.
+
+To add a post:
+
+1. Create a new `.md` file in `src/content/blog/`.
+2. Add frontmatter:
+
+```md
+---
+title: My Post Title
+date: 2026-05-02
+description: One short sentence about the post.
+tags:
+  - tag one
+  - tag two
+draft: false
+asciiHeader: "[ optional ascii header ]"
+---
+
+Write the post here.
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Set `draft: true` to hide a post from the blog list and static routes.
 
-## 🚀 Project Structure
+## Now Panel
 
-Inside of your Astro project, you'll see the following folders and files:
+Update the homepage Now panel by editing `src/data/now.json`.
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
+## Bookshelf
+
+Bookshelf entries live in `src/data/bookshelf.json`.
+
+Add or edit items in the `entries` array. Each item can use:
+
+```json
+{
+	"title": "Book or paper title",
+	"creator": "Author, host, or source",
+	"type": "book, textbook, audiobook, podcast, paper, notes",
+	"status": "current, reference, queue, or archive",
+	"notes": "Short shelf note.",
+	"tags": ["photonics", "simulation"],
+	"year": 2026,
+	"link": "https://optional-link.example"
+}
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+The `status` field controls the page grouping.
 
-## 🧞 Commands
+## Commands
 
-All commands are run from the root of the project, from a terminal:
+Use `npm.cmd` on this Windows setup to avoid the PowerShell script shim issue.
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+| Command | Action |
+| :-- | :-- |
+| `npm.cmd run dev` | Start the local dev server |
+| `npm.cmd run build` | Build the static site |
+| `npm.cmd run preview` | Preview the production build |

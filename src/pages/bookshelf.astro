@@ -1,20 +1,57 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import bookshelf from '../data/bookshelf.json';
 
-const shelves = [
+const statusGroups = [
 	{
-		title: 'Physics and Photonics',
-		description: 'Texts and references for optics, semiconductor physics, and quantum mechanics.',
+		title: 'currently reading / listening',
+		statuses: ['current', 'currently reading', 'currently listening', 'currently reading/listening'],
 	},
 	{
-		title: 'Computation',
-		description: 'Numerical methods, scientific Python, visualization, and simulation practice.',
+		title: 'reference / textbooks',
+		statuses: ['reference', 'textbook', 'textbooks', 'reference/textbooks'],
 	},
 	{
-		title: 'Writing and Systems',
-		description: 'Books that sharpen explanation, engineering judgment, and technical taste.',
+		title: 'queue',
+		statuses: ['queue', 'to read', 'next'],
+	},
+	{
+		title: 'archive',
+		statuses: ['archive', 'finished', 'done'],
 	},
 ];
+
+const entries = bookshelf.entries ?? [];
+
+const normalize = (value = '') => value.toString().trim().toLowerCase();
+const matchesGroup = (entry, group) => group.statuses.includes(normalize(entry.status));
+const matchedEntries = new Set();
+
+const groupedShelves = statusGroups
+	.map((group) => {
+		const groupEntries = entries.filter((entry) => matchesGroup(entry, group));
+		groupEntries.forEach((entry) => matchedEntries.add(entry));
+
+		return {
+			...group,
+			entries: groupEntries,
+		};
+	})
+	.filter((group) => group.entries.length > 0);
+
+const uncategorized = entries.filter((entry) => !matchedEntries.has(entry));
+
+if (uncategorized.length > 0) {
+	groupedShelves.push({
+		title: 'uncategorized',
+		statuses: [],
+		entries: uncategorized,
+	});
+}
+
+const hasTags = (entry) => Array.isArray(entry.tags) && entry.tags.length > 0;
+const hasMeta = (entry) => Boolean(entry.year || entry.link);
+const isExternalLink = (link) => typeof link === 'string' && link.startsWith('http');
 ---
 
 <Layout title="Bookshelf" description="Books and references Corbin Riches is reading or recommending.">
@@ -22,22 +59,74 @@ const shelves = [
 		<p class="eyebrow">bookshelf</p>
 		<h1>Reading list, references, and future notes.</h1>
 		<p>
-			A simple shelf for books, papers, manuals, and references that shape the work. This will
-			become more useful as titles and short notes are added.
+			A simple shelf for books, textbooks, audiobooks, podcasts, papers, and references that
+			shape the work. The entries are kept in a small JSON file so this page can stay easy to
+			update.
 		</p>
 	</section>
 
-	<section class="section">
-		<div class="card-grid">
-			{
-				shelves.map((shelf) => (
-					<article class="project-card">
-						<p class="eyebrow">shelf</p>
-						<h3>{shelf.title}</h3>
-						<p>{shelf.description}</p>
-					</article>
-				))
-			}
-		</div>
+	<section class="section bookshelf-groups" aria-label="Bookshelf entries">
+		{
+			groupedShelves.map((group) => (
+				<div class="bookshelf-group">
+					<div class="bookshelf-group-header">
+						<h2>{group.title}</h2>
+						<p class="bookshelf-count">
+							{group.entries.length} {group.entries.length === 1 ? 'entry' : 'entries'}
+						</p>
+					</div>
+
+					<div class="bookshelf-card-grid">
+						{group.entries.map((entry) => (
+							<article class="bookshelf-card">
+								<div class="bookshelf-card-top">
+									<p class="eyebrow">{entry.type || 'item'}</p>
+									{entry.status && <span class="bookshelf-status">{entry.status}</span>}
+								</div>
+
+								<h3>{entry.title || 'Untitled shelf item'}</h3>
+
+								{entry.creator && <p class="bookshelf-creator">{entry.creator}</p>}
+
+								{entry.notes && <p class="bookshelf-notes">{entry.notes}</p>}
+
+								{hasMeta(entry) && (
+									<div class="bookshelf-meta">
+										{entry.year && <span>{entry.year}</span>}
+										{entry.link && (
+											<a
+												href={entry.link}
+												target={isExternalLink(entry.link) ? '_blank' : undefined}
+												rel={isExternalLink(entry.link) ? 'noreferrer' : undefined}
+											>
+												link
+											</a>
+										)}
+									</div>
+								)}
+
+								{hasTags(entry) && (
+									<ul class="tag-list" aria-label={`${entry.title || 'Shelf item'} tags`}>
+										{entry.tags.map((tag) => (
+											<li>{tag}</li>
+										))}
+									</ul>
+								)}
+							</article>
+						))}
+					</div>
+				</div>
+			))
+		}
+
+		{
+			groupedShelves.length === 0 && (
+				<div class="empty-state">
+					<p class="eyebrow">empty shelf</p>
+					<h2>No bookshelf entries yet.</h2>
+					<p>Add entries in <code>src/data/bookshelf.json</code>.</p>
+				</div>
+			)
+		}
 	</section>
 </Layout>

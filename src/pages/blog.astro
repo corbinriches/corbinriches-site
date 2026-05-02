@@ -1,11 +1,25 @@
 ---
+import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
+
+const getSlug = (post) => (post.slug || post.id).replace(/\.(md|mdx)$/, '');
+
+const getReadingTime = (body = '') => {
+	const words = body.trim().split(/\s+/).filter(Boolean).length;
+	const minutes = Math.max(1, Math.ceil(words / 200));
+
+	return `${minutes} min read`;
+};
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+	(firstPost, secondPost) => secondPost.data.date.valueOf() - firstPost.data.date.valueOf(),
+);
 ---
 
 <Layout title="Blog" description="Technical notes and short essays from Corbin Riches.">
 	<section class="page-header">
 		<p class="eyebrow">blog</p>
-		<h1>Notes will live here.</h1>
+		<h1>Notes and project logs.</h1>
 		<p>
 			This section is for technical writing, project updates, derivations, reading notes, and
 			short explanations that are useful enough to keep.
@@ -13,13 +27,41 @@ import Layout from '../layouts/Layout.astro';
 	</section>
 
 	<section class="section">
-		<div class="empty-state">
-			<p class="eyebrow">draft queue</p>
-			<h2>First posts are still being assembled.</h2>
-			<p>
-				Likely topics include quantum dot modeling, simulation habits, photonics references,
-				and notes from engineering physics coursework or lab work.
-			</p>
-		</div>
+		{
+			posts.length > 0 ? (
+				<div class="post-list">
+					{posts.map((post) => (
+						<article class="post-card">
+							<p class="eyebrow">{getReadingTime(post.body)}</p>
+							<h2><a href={`/blog/${getSlug(post)}/`}>{post.data.title}</a></h2>
+							<div class="post-meta">
+								<time datetime={post.data.date.toISOString()}>
+									{post.data.date.toLocaleDateString('en-CA', {
+										year: 'numeric',
+										month: 'short',
+										day: 'numeric',
+										timeZone: 'UTC',
+									})}
+								</time>
+								{post.data.tags.length > 0 && (
+									<ul class="tag-list" aria-label={`${post.data.title} tags`}>
+										{post.data.tags.map((tag) => (
+											<li>{tag}</li>
+										))}
+									</ul>
+								)}
+							</div>
+							<p>{post.data.description}</p>
+						</article>
+					))}
+				</div>
+			) : (
+				<div class="empty-state">
+					<p class="eyebrow">draft queue</p>
+					<h2>First posts are still being assembled.</h2>
+					<p>Likely topics include quantum dot modeling, simulation habits, and photonics references.</p>
+				</div>
+			)
+		}
 	</section>
 </Layout>

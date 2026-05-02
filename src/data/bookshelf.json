@@ -1,0 +1,75 @@
+{
+	"_note": "Update the Bookshelf page by editing this file. Use status values like current, reference, queue, or archive to control grouping.",
+	"entries": [
+		{
+			"title": "Photonics notes and lab references",
+			"creator": "course notes / personal notes",
+			"type": "notes",
+			"status": "current",
+			"notes": "A working pile of optics, semiconductor, and lab reference material.",
+			"tags": ["photonics", "optics", "lab"],
+			"year": 2026
+		},
+		{
+			"title": "The Art of Electronics",
+			"creator": "Paul Horowitz and Winfield Hill",
+			"type": "textbook",
+			"status": "reference",
+			"notes": "Useful bench-side reference for circuits, instrumentation, and practical electronics.",
+			"tags": ["electronics", "instrumentation"],
+			"year": 2015
+		},
+		{
+			"title": "Fundamentals of Photonics",
+			"creator": "Bahaa E. A. Saleh and Malvin Carl Teich",
+			"type": "textbook",
+			"status": "reference",
+			"notes": "Core optics and photonics reference. Replace this note with chapter-specific breadcrumbs later.",
+			"tags": ["photonics", "optics", "semiconductors"],
+			"year": 2019
+		},
+		{
+			"title": "Numerical Recipes",
+			"creator": "William H. Press et al.",
+			"type": "textbook",
+			"status": "reference",
+			"notes": "Numerical-methods shelf item for simulation habits, caveats, and algorithms.",
+			"tags": ["simulation", "numerical methods"],
+			"year": 2007
+		},
+		{
+			"title": "The Idea Factory",
+			"creator": "Jon Gertner",
+			"type": "audiobook",
+			"status": "queue",
+			"notes": "Bell Labs history and the culture around deep technical work.",
+			"tags": ["history", "engineering culture"],
+			"year": 2012
+		},
+		{
+			"title": "The Amp Hour",
+			"creator": "Chris Gammell and guests",
+			"type": "podcast",
+			"status": "queue",
+			"notes": "Electronics conversations to sample during commutes or shop time.",
+			"tags": ["podcast", "electronics"]
+		},
+		{
+			"title": "Quantum-confined Stark effect reading packet",
+			"creator": "paper queue",
+			"type": "paper",
+			"status": "queue",
+			"notes": "Placeholder for papers connected to quantum dots, semiconductor wells, and field-dependent spectra.",
+			"tags": ["quantum dots", "QCSE", "papers"]
+		},
+		{
+			"title": "Surely You're Joking, Mr. Feynman!",
+			"creator": "Richard P. Feynman",
+			"type": "book",
+			"status": "archive",
+			"notes": "Finished shelf item. A reminder to keep curiosity close to the actual work.",
+			"tags": ["physics", "archive"],
+			"year": 1985
+		}
+	]
+}

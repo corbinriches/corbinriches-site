@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import AsciiPortrait from '../components/AsciiPortrait.astro';
 import CoinToss from '../components/CoinToss.astro';
 import Guestbook from '../components/Guestbook.astro';
+import NowPanel from '../components/NowPanel.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import UpdatesPanel from '../components/UpdatesPanel.astro';
 
@@ -85,6 +86,7 @@ const noteModules = [
 	</section>
 
 	<section class="section module-grid personal-widgets" aria-label="Personal homepage widgets">
+		<NowPanel />
 		<CoinToss />
 		<Guestbook />
 		<UpdatesPanel />

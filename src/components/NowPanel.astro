@@ -1,0 +1,28 @@
+---
+import now from '../data/now.json';
+
+const fields = [
+	['location', now.location],
+	['building', now.building],
+	['reading', now.reading],
+	['listening', now.listening],
+	['working on', now.workingOn],
+	['status', now.status],
+].filter(([, value]) => typeof value === 'string' && value.trim().length > 0);
+---
+
+<article class="home-module now-panel">
+	<p class="eyebrow">now</p>
+	<h3>Now</h3>
+	{now.lastUpdated && <p class="now-updated">last updated: {now.lastUpdated}</p>}
+	<dl class="now-list">
+		{
+			fields.map(([label, value]) => (
+				<div>
+					<dt>{label}</dt>
+					<dd>{value}</dd>
+				</div>
+			))
+		}
+	</dl>
+</article>

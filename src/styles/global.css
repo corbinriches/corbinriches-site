@@ -447,7 +447,8 @@ h3 {
 
 .project-card,
 .empty-state,
-.home-module {
+.home-module,
+.post-card {
 	min-height: 100%;
 	padding: 1rem;
 }
@@ -461,19 +462,240 @@ h3 {
 .project-card h2,
 .project-card h3,
 .empty-state h2,
-.home-module h3 {
+.home-module h3,
+.post-card h2 {
 	margin-bottom: 0.65rem;
 }
 
 .project-card p + p,
 .empty-state p + p,
-.home-module p + p {
+.home-module p + p,
+.post-card p + p {
 	margin-top: 0.65rem;
 }
 
 .project-card a,
-.home-module a {
+.home-module a,
+.post-card a {
 	color: inherit;
+}
+
+.post-list {
+	display: grid;
+	gap: 0.8rem;
+}
+
+.post-card,
+.blog-post .post-body {
+	border: 1px solid var(--line);
+	background: var(--panel);
+	box-shadow: 3px 3px 0 var(--shadow);
+}
+
+.post-meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem 0.85rem;
+	align-items: center;
+	margin: 0.75rem 0;
+	color: var(--dim);
+	font-size: 0.78rem;
+}
+
+.post-meta .tag-list {
+	margin: 0;
+}
+
+.post-ascii {
+	margin: 1rem 0 0;
+	overflow-x: auto;
+	border: 1px dashed var(--line);
+	padding: 0.55rem 0.7rem;
+	color: var(--text);
+	font: 0.86rem/1.25 var(--mono);
+	white-space: pre;
+}
+
+.blog-post .post-body {
+	padding: clamp(1rem, 3vw, 1.5rem);
+}
+
+.post-body > * + * {
+	margin-top: 1rem;
+}
+
+.post-body p,
+.post-body li {
+	max-width: 72ch;
+	color: var(--muted);
+}
+
+.post-body ul,
+.post-body ol {
+	padding-left: 1.25rem;
+}
+
+.post-body code {
+	border: 1px solid var(--line);
+	padding: 0.05rem 0.25rem;
+	background: var(--panel-soft);
+	color: var(--text);
+}
+
+.post-back {
+	margin-top: 1.5rem;
+}
+
+.bookshelf-groups {
+	display: grid;
+	gap: 1rem;
+}
+
+.bookshelf-group {
+	border: 1px solid var(--line);
+	background: var(--panel-soft);
+	box-shadow: 3px 3px 0 var(--shadow);
+	padding: clamp(0.85rem, 2.5vw, 1rem);
+}
+
+.bookshelf-group-header {
+	display: flex;
+	align-items: end;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-bottom: 0.85rem;
+	padding-bottom: 0.45rem;
+	border-bottom: 1px dashed var(--line);
+}
+
+.bookshelf-group-header h2 {
+	font-size: clamp(1.05rem, 2.4vw, 1.35rem);
+}
+
+.bookshelf-count {
+	color: var(--dim);
+	font-size: 0.76rem;
+	white-space: nowrap;
+}
+
+.bookshelf-card-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 0.75rem;
+}
+
+.bookshelf-card {
+	display: flex;
+	min-width: 0;
+	flex-direction: column;
+	gap: 0.55rem;
+	border: 1px dashed var(--line);
+	background: var(--panel);
+	padding: 0.85rem;
+}
+
+.bookshelf-card-top,
+.bookshelf-meta {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.45rem 0.75rem;
+}
+
+.bookshelf-card-top .eyebrow {
+	margin-bottom: 0;
+}
+
+.bookshelf-status,
+.bookshelf-meta span,
+.bookshelf-meta a {
+	border: 1px solid var(--line);
+	padding: 0.1rem 0.35rem;
+	color: var(--text);
+	font-size: 0.72rem;
+	line-height: 1.35;
+}
+
+.bookshelf-status::before {
+	content: '[';
+	color: var(--dim);
+}
+
+.bookshelf-status::after {
+	content: ']';
+	color: var(--dim);
+}
+
+.bookshelf-creator {
+	color: var(--text);
+	font-size: 0.86rem;
+}
+
+.bookshelf-creator::before {
+	content: 'by ';
+	color: var(--dim);
+}
+
+.bookshelf-notes {
+	font-size: 0.86rem;
+	overflow-wrap: anywhere;
+}
+
+.bookshelf-meta {
+	margin-top: auto;
+	padding-top: 0.45rem;
+	border-top: 1px dashed var(--line);
+}
+
+.now-panel {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+}
+
+.now-updated {
+	border-top: 1px dashed var(--line);
+	border-bottom: 1px dashed var(--line);
+	padding: 0.45rem 0;
+	color: var(--dim);
+	font-size: 0.78rem;
+}
+
+.now-list {
+	display: grid;
+	gap: 0.45rem;
+	margin: 0;
+}
+
+.now-list div {
+	display: grid;
+	grid-template-columns: 7.5rem minmax(0, 1fr);
+	gap: 0.65rem;
+	align-items: baseline;
+	border-bottom: 1px dashed var(--line);
+	padding-bottom: 0.4rem;
+}
+
+.now-list div:last-child {
+	border-bottom: 0;
+	padding-bottom: 0;
+}
+
+.now-list dt {
+	color: var(--dim);
+	font-size: 0.76rem;
+}
+
+.now-list dt::before {
+	content: '$ ';
+}
+
+.now-list dd {
+	margin: 0;
+	color: var(--text);
+	font-size: 0.86rem;
+	overflow-wrap: anywhere;
 }
 
 .tag-list {
@@ -828,6 +1050,7 @@ button:disabled {
 	.home-board,
 	.card-grid,
 	.module-grid,
+	.bookshelf-card-grid,
 	.two-column,
 	.contact-grid,
 	.link-panel {
@@ -871,5 +1094,10 @@ button:disabled {
 	.nav-link,
 	.theme-toggle {
 		font-size: 0.78rem;
+	}
+
+	.now-list div {
+		grid-template-columns: 1fr;
+		gap: 0.15rem;
 	}
 }
