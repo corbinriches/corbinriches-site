@@ -6,41 +6,11 @@ import Guestbook from '../components/Guestbook.astro';
 import NowPanel from '../components/NowPanel.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import UpdatesPanel from '../components/UpdatesPanel.astro';
+import projectsData from '../data/projects.json';
 
-const featuredProjects = [
-	{
-		title: 'Quantum dot Schrodinger/QCSE solver',
-		description:
-			'A scientific computing project for modeling confined quantum states and field-dependent behavior in semiconductor nanostructures.',
-		tags: ['quantum dots', 'simulation', 'Python'],
-		status: 'portfolio',
-		href: '/projects/',
-	},
-	{
-		title: 'Hyperloop design team',
-		description:
-			'Hands-on engineering work across analysis, documentation, prototyping, and the practical tradeoffs of student design teams.',
-		tags: ['design', 'teamwork', 'testing'],
-		status: 'team project',
-		href: '/projects/',
-	},
-	{
-		title: 'Cryogenics and detector lab interests',
-		description:
-			'An active interest area around low-temperature systems, measurement, instrumentation, and detector-adjacent lab work.',
-		tags: ['cryogenics', 'detectors', 'lab'],
-		status: 'lab notes',
-		href: '/projects/',
-	},
-	{
-		title: 'Engineering work experience',
-		description:
-			'Industry and technical work experience that ties together problem solving, communication, and reliable execution.',
-		tags: ['engineering', 'documentation', 'operations'],
-		status: 'experience',
-		href: '/about/',
-	},
-];
+const featuredProjects = (projectsData.projects ?? [])
+	.filter((project) => project.featured)
+	.slice(0, 4);
 
 const noteModules = [
 	{
@@ -102,10 +72,11 @@ const noteModules = [
 				featuredProjects.map((project) => (
 					<ProjectCard
 						title={project.title}
-						description={project.description}
+						description={project.summary}
 						tags={project.tags}
 						status={project.status}
-						href={project.href}
+						type={project.type}
+						href={`/projects/#project-${project.slug}`}
 					/>
 				))
 			}

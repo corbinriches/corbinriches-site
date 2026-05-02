@@ -53,6 +53,30 @@ Add or edit items in the `entries` array. Each item can use:
 
 The `status` field controls the page grouping.
 
+## Projects
+
+Project entries live in `src/data/projects.json`.
+
+Add or edit items in the `projects` array. Each item can use:
+
+```json
+{
+	"title": "Project title",
+	"slug": "project-url-anchor",
+	"status": "in progress",
+	"type": "computational physics",
+	"summary": "Short project summary.",
+	"details": ["Optional extra detail line."],
+	"tags": ["simulation", "photonics"],
+	"year": 2026,
+	"flagship": false,
+	"featured": true,
+	"links": [{ "label": "demo", "href": "https://example.com" }]
+}
+```
+
+Set `featured: true` to put a project first on the Projects page and include it in the homepage project cards.
+
 ## Commands
 
 Use `npm.cmd` on this Windows setup to avoid the PowerShell script shim issue.

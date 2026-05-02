@@ -1,15 +1,78 @@
 ---
-const { title, description, tags = [], status = '', href = '' } = Astro.props;
+const {
+	title = 'Untitled project',
+	slug = '',
+	description = '',
+	summary = '',
+	details = [],
+	tags = [],
+	status = '',
+	type = '',
+	year = '',
+	flagship = false,
+	featured = false,
+	href = '',
+	links = [],
+} = Astro.props;
+
+const cardClass = [
+	'project-card',
+	featured ? 'project-card-featured' : '',
+	flagship ? 'project-card-flagship' : '',
+]
+	.filter(Boolean)
+	.join(' ');
+const cardId = slug ? `project-${slug}` : undefined;
+const projectRank = flagship ? 'flagship' : featured ? 'featured' : '';
+const labelParts = [projectRank, type, status].filter(Boolean);
+const label = labelParts.join(' / ');
+const displayDescription = description || summary;
+const safeDetails = Array.isArray(details) ? details : details ? [details] : [];
+const safeTags = Array.isArray(tags) ? tags : [];
+const safeLinks = Array.isArray(links) ? links : [];
+const isExternalLink = (link) => typeof link === 'string' && link.startsWith('http');
 ---
 
-<article class="project-card">
-	{status && <p class="eyebrow">{status}</p>}
+<article id={cardId} class={cardClass}>
+	<div class="project-card-top">
+		{label && <p class="eyebrow">{label}</p>}
+		{year && <span class="project-year">{year}</span>}
+	</div>
+
 	<h3>{href ? <a href={href}>{title}</a> : title}</h3>
-	<p>{description}</p>
+
+	{displayDescription && <p>{displayDescription}</p>}
+
 	{
-		tags.length > 0 && (
+		safeDetails.length > 0 && (
+			<ul class="project-details">
+				{safeDetails.map((detail) => (
+					<li>{detail}</li>
+				))}
+			</ul>
+		)
+	}
+
+	{
+		safeLinks.length > 0 && (
+			<div class="project-links" aria-label={`${title} links`}>
+				{safeLinks.map((link) => (
+					<a
+						href={link.href}
+						target={isExternalLink(link.href) ? '_blank' : undefined}
+						rel={isExternalLink(link.href) ? 'noreferrer' : undefined}
+					>
+						{link.label || 'link'}
+					</a>
+				))}
+			</div>
+		)
+	}
+
+	{
+		safeTags.length > 0 && (
 			<ul class="tag-list" aria-label={`${title} topics`}>
-				{tags.map((tag) => (
+				{safeTags.map((tag) => (
 					<li>{tag}</li>
 				))}
 			</ul>

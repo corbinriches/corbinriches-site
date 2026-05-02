@@ -1,37 +1,20 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import ProjectCard from '../components/ProjectCard.astro';
+import projectsData from '../data/projects.json';
 
-const projects = [
-	{
-		title: 'Quantum dot Schrodinger/QCSE solver',
-		description:
-			'A modeling project for studying confined energy states and electric-field effects in quantum dot structures.',
-		tags: ['quantum dots', 'Schrodinger equation', 'QCSE', 'simulation'],
-		status: 'scientific computing',
-	},
-	{
-		title: 'Hyperloop design team',
-		description:
-			'Student design work involving engineering tradeoffs, documentation, analysis, and team execution.',
-		tags: ['student design', 'systems', 'testing'],
-		status: 'team engineering',
-	},
-	{
-		title: 'Cryogenics and detector lab interests',
-		description:
-			'A developing project area for low-temperature instrumentation, measurement, and detector-adjacent lab skills.',
-		tags: ['cryogenics', 'instrumentation', 'detectors'],
-		status: 'lab interests',
-	},
-	{
-		title: 'Engineering work experience',
-		description:
-			'A place for concise summaries of engineering work, technical communication, and practical problem solving.',
-		tags: ['work experience', 'documentation', 'engineering'],
-		status: 'experience',
-	},
-];
+const projects = projectsData.projects ?? [];
+
+const sortedProjects = projects
+	.map((project, index) => ({ project, index }))
+	.sort((a, b) => {
+		if (a.project.featured !== b.project.featured) {
+			return a.project.featured ? -1 : 1;
+		}
+
+		return a.index - b.index;
+	})
+	.map(({ project }) => project);
 ---
 
 <Layout title="Projects" description="Selected projects and engineering work by Corbin Riches.">
@@ -47,12 +30,19 @@ const projects = [
 	<section class="section">
 		<div class="card-grid">
 			{
-				projects.map((project) => (
+				sortedProjects.map((project) => (
 					<ProjectCard
 						title={project.title}
-						description={project.description}
-						tags={project.tags}
+						slug={project.slug}
+						summary={project.summary}
+						details={project.details}
 						status={project.status}
+						type={project.type}
+						tags={project.tags}
+						year={project.year}
+						flagship={project.flagship}
+						featured={project.featured}
+						links={project.links}
 					/>
 				))
 			}

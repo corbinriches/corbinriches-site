@@ -1,0 +1,85 @@
+{
+	"_note": "Update the Projects page and homepage project cards by editing this file. Featured projects appear first.",
+	"projects": [
+		{
+			"title": "Quantum Dot Schrodinger/QCSE Solver",
+			"slug": "quantum-dot-schrodinger-qcse-solver",
+			"status": "in progress",
+			"type": "computational physics",
+			"summary": "A flagship scientific computing project for modeling confined quantum states and electric-field effects in semiconductor nanostructures.",
+			"details": [
+				"Built around numerical modeling, plotting, and careful interpretation of quantum dot behavior.",
+				"Intended to become a deeper technical writeup with assumptions, equations, validation notes, and examples."
+			],
+			"tags": ["quantum dots", "Schrodinger equation", "QCSE", "simulation", "Python"],
+			"year": 2026,
+			"flagship": true,
+			"featured": true
+		},
+		{
+			"title": "Hyperloop Design Team",
+			"slug": "hyperloop-design-team",
+			"status": "team project",
+			"type": "student design",
+			"summary": "Student design work involving engineering tradeoffs, analysis, documentation, prototyping, and testing.",
+			"details": [
+				"Useful experience in turning open-ended engineering problems into practical team tasks.",
+				"Future notes can separate design contributions, documentation, and testing work."
+			],
+			"tags": ["student design", "systems", "testing", "documentation"],
+			"year": 2025,
+			"featured": true
+		},
+		{
+			"title": "Cryogenics / Detector Lab Interests",
+			"slug": "cryogenics-detector-lab-interests",
+			"status": "developing",
+			"type": "lab interests",
+			"summary": "A developing project area around low-temperature systems, measurement, instrumentation, and detector-adjacent lab skills.",
+			"details": [
+				"Collecting concepts and references around cryogenic hardware, sensors, vacuum systems, and measurement habits.",
+				"Expected to grow into notes as lab experience and reading accumulate."
+			],
+			"tags": ["cryogenics", "instrumentation", "detectors", "lab"],
+			"year": 2026,
+			"featured": true
+		},
+		{
+			"title": "Engineering Work Experience",
+			"slug": "engineering-work-experience",
+			"status": "experience",
+			"type": "work",
+			"summary": "Engineering and technical work experience focused on reliable execution, communication, and practical problem solving.",
+			"details": [
+				"Reserved for concise summaries of work experience, responsibilities, tools, and outcomes.",
+				"Can later link outward to a resume or fuller experience page."
+			],
+			"tags": ["engineering", "documentation", "operations"],
+			"featured": true
+		},
+		{
+			"title": "corbinriches.com / This Website",
+			"slug": "corbinriches-dot-com",
+			"status": "live draft",
+			"type": "personal website",
+			"summary": "A static Astro portfolio and personal homepage with data-driven notes, projects, bookshelf entries, and small local-only widgets.",
+			"details": [
+				"Built as a maintainable old-web inspired site using Astro, Markdown, JSON data files, and small client-side scripts.",
+				"Also a place to practice technical writing, page structure, and lightweight interactive details."
+			],
+			"tags": ["Astro", "static site", "portfolio", "writing"],
+			"year": 2026,
+			"featured": false,
+			"links": [
+				{
+					"label": "home",
+					"href": "/"
+				},
+				{
+					"label": "blog",
+					"href": "/blog/"
+				}
+			]
+		}
+	]
+}
