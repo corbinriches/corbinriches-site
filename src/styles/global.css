@@ -694,6 +694,40 @@ textarea {
 	resize: vertical;
 }
 
+.guestbook-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	align-items: center;
+}
+
+.guestbook-toolbar {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	align-items: center;
+	justify-content: space-between;
+	border-top: 1px dashed var(--line);
+	padding-top: 0.65rem;
+}
+
+.quiet-button {
+	min-height: 2rem;
+	padding: 0.3rem 0.55rem;
+	font-size: 0.76rem;
+}
+
+.guestbook-note,
+.guestbook-count,
+.guestbook-status {
+	color: var(--dim);
+	font-size: 0.76rem;
+}
+
+.guestbook-status {
+	min-height: 1.2em;
+}
+
 input:focus,
 textarea:focus {
 	outline: 2px solid var(--line);
@@ -708,20 +742,42 @@ button:disabled {
 
 .guestbook-entries {
 	display: grid;
-	gap: 0.5rem;
+	gap: 0.45rem;
+	max-height: 8.75rem;
 	margin: 0;
+	overflow-y: auto;
 	padding-left: 0;
 	list-style: none;
+	scrollbar-color: var(--line) transparent;
+}
+
+.guestbook-entries.archive-open {
+	max-height: 13rem;
 }
 
 .guestbook-entries li {
+	border: 1px dashed var(--line);
+	padding: 0.4rem 0.45rem;
 	color: var(--muted);
-	font-size: 0.86rem;
+	font-size: 0.82rem;
+	line-height: 1.35;
+	overflow-wrap: anywhere;
+	word-break: break-word;
 }
 
 .guestbook-entries strong {
 	color: var(--text);
 	font-weight: 700;
+}
+
+.guestbook-stamp,
+.guestbook-divider {
+	color: var(--dim);
+}
+
+.guestbook-message::after {
+	content: ' //';
+	color: var(--dim);
 }
 
 .contact-grid {

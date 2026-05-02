@@ -1,24 +1,37 @@
+---
+import { kindnessMap } from '../data/kindnessMap.js';
+---
+
 <article class="home-module interactive-module guestbook-module" data-guestbook>
 	<p class="eyebrow">guestbook.local</p>
 	<h3>Guestbook</h3>
-	<p>Early local-only version. Entries save in this browser, not on the internet.</p>
+	<p>local test guestbook - saved only in this browser for now</p>
 
 	<form class="guestbook-form" data-guestbook-form>
 		<label>
 			name
-			<input name="name" autocomplete="name" maxlength="32" required />
+			<input name="name" autocomplete="name" maxlength="32" required data-guestbook-name />
 		</label>
 		<label>
 			message
-			<textarea name="message" rows="3" maxlength="160" required></textarea>
+			<textarea name="message" rows="3" maxlength="160" required data-guestbook-message></textarea>
 		</label>
-		<button class="button" type="submit">sign locally</button>
+		<p class="guestbook-note">kindness autocorrect enabled / 160 char max</p>
+		<div class="guestbook-actions">
+			<button class="button" type="submit">sign</button>
+			<button class="button quiet-button" type="button" data-clear-guestbook>clear local entries</button>
+		</div>
+		<p class="guestbook-status" data-guestbook-status aria-live="polite"></p>
 	</form>
 
+	<div class="guestbook-toolbar">
+		<p class="guestbook-count" data-guestbook-count>showing latest entries</p>
+		<button class="button quiet-button" type="button" data-toggle-archive>view archive</button>
+	</div>
 	<ul class="guestbook-entries" data-guestbook-entries aria-label="Local guestbook entries"></ul>
 </article>
 
-<script is:inline>
+<script define:vars={{ kindnessMap }}>
 	(() => {
 		const panel = document.querySelector('[data-guestbook]');
 		if (!panel) return;
@@ -26,44 +39,109 @@
 		const storageKey = 'corbin-guestbook';
 		const form = panel.querySelector('[data-guestbook-form]');
 		const list = panel.querySelector('[data-guestbook-entries]');
+		const clearButton = panel.querySelector('[data-clear-guestbook]');
+		const archiveButton = panel.querySelector('[data-toggle-archive]');
+		const countEl = panel.querySelector('[data-guestbook-count]');
+		const statusEl = panel.querySelector('[data-guestbook-status]');
+		const latestEntryCount = 3;
+		const kindnessEntries = Object.entries(kindnessMap).sort(
+			([firstWord], [secondWord]) => secondWord.length - firstWord.length,
+		);
 		const starterEntries = [
-			{ name: 'site', message: 'guestbook placeholder initialized.' },
-			{ name: 'future visitor', message: 'this will eventually be more real.' },
+			{ name: 'site', message: 'guestbook initialized. please sign the local log.', date: 'demo-01' },
+			{ name: 'future visitor', message: 'cool homepage. very 2001 in here.', date: 'demo-02' },
+			{ name: 'lab terminal', message: 'status: readable / static / no server attached.', date: 'demo-03' },
 		];
+
+		const escapeRegExp = (word) => word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+		const filterText = (text) => {
+			let filteredText = String(text || '');
+			let replacementCount = 0;
+
+			kindnessEntries.forEach(([word, replacement]) => {
+				const safeWord = escapeRegExp(word.trim());
+				if (!safeWord) return;
+
+				const pattern = new RegExp(`(^|[^A-Za-z0-9_])(${safeWord})(?=$|[^A-Za-z0-9_])`, 'gi');
+				filteredText = filteredText.replace(pattern, (_match, prefix) => {
+					replacementCount += 1;
+					return `${prefix}${replacement}`;
+				});
+			});
+
+			return { text: filteredText, replacementCount };
+		};
+
+		const getDateLabel = () => {
+			const now = new Date();
+			const year = String(now.getFullYear()).slice(-2);
+			const month = String(now.getMonth() + 1).padStart(2, '0');
+			const day = String(now.getDate()).padStart(2, '0');
+
+			return `${year}.${month}.${day}`;
+		};
+
+		const normalizeEntry = (entry) => ({
+			name: filterText(String(entry?.name || 'anonymous').trim().slice(0, 32) || 'anonymous').text,
+			message: filterText(String(entry?.message || '').trim().slice(0, 160)).text,
+			date: String(entry?.date || getDateLabel()).slice(0, 16),
+		});
 
 		const readEntries = () => {
 			try {
-				return JSON.parse(localStorage.getItem(storageKey)) || starterEntries;
+				const savedEntries = JSON.parse(localStorage.getItem(storageKey));
+				return Array.isArray(savedEntries) && savedEntries.length > 0
+					? savedEntries.map(normalizeEntry)
+					: starterEntries.map(normalizeEntry);
 			} catch {
-				return starterEntries;
+				return starterEntries.map(normalizeEntry);
 			}
 		};
 
 		const writeEntries = (entries) => {
 			try {
-				localStorage.setItem(storageKey, JSON.stringify(entries));
+				localStorage.setItem(storageKey, JSON.stringify(entries.map(normalizeEntry)));
 			} catch {
 				/* The visible list can still update without storage. */
 			}
 		};
 
-		const renderEntries = (entries) => {
+		const renderEntries = (entries, showArchive = false) => {
 			list.replaceChildren();
+			list.classList.toggle('archive-open', showArchive);
+			archiveButton.textContent = showArchive ? 'hide archive' : 'view archive';
 
-			entries.slice(0, 5).forEach((entry) => {
+			const filteredEntries = entries.map(normalizeEntry);
+			const visibleEntries = showArchive ? filteredEntries : filteredEntries.slice(0, latestEntryCount);
+
+			countEl.textContent =
+				filteredEntries.length > latestEntryCount && !showArchive
+					? `showing latest ${latestEntryCount} of ${filteredEntries.length} local entries`
+					: `showing ${visibleEntries.length} local ${visibleEntries.length === 1 ? 'entry' : 'entries'}`;
+
+			visibleEntries.forEach((entry) => {
 				const item = document.createElement('li');
+				const stamp = document.createElement('span');
 				const name = document.createElement('strong');
 				const message = document.createElement('span');
+				const divider = document.createElement('span');
 
+				stamp.className = 'guestbook-stamp';
+				message.className = 'guestbook-message';
+				divider.className = 'guestbook-divider';
+				stamp.textContent = `[${entry.date}]`;
 				name.textContent = entry.name;
+				divider.textContent = ' :: ';
 				message.textContent = entry.message;
-				item.append(name, ' / ', message);
+				item.append(stamp, ' ', name, divider, message);
 				list.append(item);
 			});
 		};
 
 		let entries = readEntries();
-		renderEntries(entries);
+		let archiveOpen = false;
+		renderEntries(entries, archiveOpen);
 
 		form.addEventListener('submit', (event) => {
 			event.preventDefault();
@@ -71,13 +149,48 @@
 			const formData = new FormData(form);
 			const name = String(formData.get('name') || '').trim();
 			const message = String(formData.get('message') || '').trim();
+			const filteredName = filterText(name.slice(0, 32));
+			const filteredMessage = filterText(message.slice(0, 160));
+			const replacementCount = filteredName.replacementCount + filteredMessage.replacementCount;
 
-			if (!name || !message) return;
+			if (!name || !message) {
+				statusEl.textContent = 'name and message required.';
+				return;
+			}
 
-			entries = [{ name, message }, ...entries].slice(0, 5);
+			entries = [
+				{
+					name: filteredName.text || 'anonymous',
+					message: filteredMessage.text,
+					date: getDateLabel(),
+				},
+				...entries,
+			];
 			writeEntries(entries);
-			renderEntries(entries);
+			renderEntries(entries, archiveOpen);
+			statusEl.textContent =
+				replacementCount > 0
+					? `signed locally. kindness filter adjusted ${replacementCount} word(s).`
+					: 'signed locally.';
 			form.reset();
+		});
+
+		clearButton.addEventListener('click', () => {
+			try {
+				localStorage.removeItem(storageKey);
+			} catch {
+				/* The visible list can still reset without storage access. */
+			}
+
+			entries = starterEntries.map(normalizeEntry);
+			archiveOpen = false;
+			renderEntries(entries, archiveOpen);
+			statusEl.textContent = 'local entries cleared.';
+		});
+
+		archiveButton.addEventListener('click', () => {
+			archiveOpen = !archiveOpen;
+			renderEntries(entries, archiveOpen);
 		});
 	})();
 </script>
