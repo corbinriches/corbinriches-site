@@ -2,14 +2,40 @@
 
 Static Astro personal website and digital portfolio.
 
+## Development Workflow
+
+Branch roles:
+
+- `main` is production. Netlify deploys this branch to the live site.
+- `dev` is staging and experiments. Push here when you want to test changes before they go live.
+- Feature branches are optional for larger changes, such as `feature/blog-polish` or `feature/project-pages`.
+
+Typical flow:
+
+1. Start from `dev`.
+2. Run `npm.cmd run dev` and work locally.
+3. Edit content in `src/data/` or `src/content/` when possible.
+4. Run `npm.cmd run build` before committing.
+5. Commit and push to `dev` for staging/testing.
+6. Merge `dev` into `main` when the change is ready for production.
+
+For larger experiments, create a feature branch from `dev`, then merge it back into `dev`
+when it is stable.
+
+Do not commit `node_modules`, secrets, API keys, or private `.env` files. Content updates
+usually happen in `src/data/` for JSON-driven pages or `src/content/` for Markdown posts.
+
 ## Blog Posts
 
-Blog posts live in `src/content/blog/` as Markdown files.
+Blog posts live in `src/content/blog/` as Markdown files. The blog index, tag pages, and
+homepage latest-writing module are generated from those files.
 
 To add a post:
 
-1. Create a new `.md` file in `src/content/blog/`.
-2. Add frontmatter:
+1. Copy `templates/blog-post.md`.
+2. Paste it into `src/content/blog/`.
+3. Rename it with a lowercase URL-style filename, such as `my-lab-note.md`.
+4. Edit the frontmatter:
 
 ```md
 ---
@@ -26,7 +52,16 @@ asciiHeader: "[ optional ascii header ]"
 Write the post here.
 ```
 
-Set `draft: true` to hide a post from the blog list and static routes.
+Use `draft: true` while writing. Draft posts are hidden from the blog index, tag pages,
+homepage latest-writing module, and static blog routes.
+
+Set `draft: false` when the post is ready to publish.
+
+Tags are plain text strings. Tag pages are generated automatically at `/blog/tags/` and
+`/blog/tags/my-tag/`.
+
+Preview locally with `npm.cmd run dev`, then make sure the static build passes with
+`npm.cmd run build`.
 
 ## Now Panel
 
@@ -81,8 +116,14 @@ Set `featured: true` to put a project first on the Projects page and include it 
 
 Use `npm.cmd` on this Windows setup to avoid the PowerShell script shim issue.
 
+### Common Commands
+
 | Command | Action |
 | :-- | :-- |
 | `npm.cmd run dev` | Start the local dev server |
 | `npm.cmd run build` | Build the static site |
 | `npm.cmd run preview` | Preview the production build |
+| `git status` | Check changed files |
+| `git add .` | Stage current changes |
+| `git commit -m "message"` | Commit staged changes |
+| `git push` | Push the current branch |

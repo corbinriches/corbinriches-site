@@ -1,0 +1,38 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import { getPublishedPosts, getTagSummaries } from '../../../utils/blog';
+
+const posts = await getPublishedPosts();
+const tags = getTagSummaries(posts);
+---
+
+<Layout title="Blog Tags" description="Browse blog posts by tag.">
+	<section class="page-header">
+		<p class="eyebrow">blog/tags</p>
+		<h1>Tag index.</h1>
+		<p>A small index for browsing notes by topic.</p>
+	</section>
+
+	<section class="section">
+		{
+			tags.length > 0 ? (
+				<div class="tag-index">
+					{tags.map((tag) => (
+						<a class="tag-index-link" href={`/blog/tags/${tag.slug}/`}>
+							<span>{tag.tag}</span>
+							<span>{tag.count} {tag.count === 1 ? 'post' : 'posts'}</span>
+						</a>
+					))}
+				</div>
+			) : (
+				<div class="empty-state">
+					<p class="eyebrow">no tags</p>
+					<h2>No tags yet.</h2>
+					<p>Add tags to Markdown frontmatter in <code>src/content/blog/</code>.</p>
+				</div>
+			)
+		}
+	</section>
+
+	<p class="post-back"><a href="/blog/">back to blog</a></p>
+</Layout>

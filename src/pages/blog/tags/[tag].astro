@@ -1,0 +1,64 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import {
+	formatPostDate,
+	getPostSlug,
+	getPublishedPosts,
+	getReadingTime,
+	getTagSummaries,
+	slugifyTag,
+} from '../../../utils/blog';
+
+export async function getStaticPaths() {
+	const posts = await getPublishedPosts();
+	const tags = getTagSummaries(posts);
+
+	return tags.map((tag) => ({
+		params: { tag: tag.slug },
+		props: {
+			tag,
+			posts: posts.filter((post) =>
+				(post.data.tags ?? []).some((postTag) => slugifyTag(postTag) === tag.slug),
+			),
+		},
+	}));
+}
+
+const { tag, posts } = Astro.props;
+---
+
+<Layout title={`Blog Tag: ${tag.tag}`} description={`Blog posts tagged ${tag.tag}.`}>
+	<section class="page-header">
+		<p class="eyebrow">blog/tags</p>
+		<h1>{tag.tag}</h1>
+		<p>
+			{posts.length} {posts.length === 1 ? 'post' : 'posts'} filed under this tag.
+		</p>
+	</section>
+
+	<section class="section">
+		<div class="post-list">
+			{
+				posts.map((post) => (
+					<article class="post-card">
+						<p class="eyebrow">{getReadingTime(post.body)}</p>
+						<h2><a href={`/blog/${getPostSlug(post)}/`}>{post.data.title}</a></h2>
+						<div class="post-meta">
+							<time datetime={post.data.date.toISOString()}>{formatPostDate(post.data.date)}</time>
+							{post.data.tags.length > 0 && (
+								<ul class="tag-list" aria-label={`${post.data.title} tags`}>
+									{post.data.tags.map((postTag) => (
+										<li><a href={`/blog/tags/${slugifyTag(postTag)}/`}>{postTag}</a></li>
+									))}
+								</ul>
+							)}
+						</div>
+						<p>{post.data.description}</p>
+					</article>
+				))
+			}
+		</div>
+	</section>
+
+	<p class="post-back"><a href="/blog/tags/">back to tags</a></p>
+</Layout>

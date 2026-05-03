@@ -7,19 +7,15 @@ import NowPanel from '../components/NowPanel.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import UpdatesPanel from '../components/UpdatesPanel.astro';
 import projectsData from '../data/projects.json';
+import { formatPostDate, getPostSlug, getPublishedPosts, getReadingTime } from '../utils/blog';
 
 const featuredProjects = (projectsData.projects ?? [])
 	.filter((project) => project.featured)
 	.slice(0, 4);
 
+const latestPosts = (await getPublishedPosts()).slice(0, 3);
+
 const noteModules = [
-	{
-		label: 'blog/recent posts',
-		title: 'Recent notes',
-		body: 'Placeholder for short technical notes, course-adjacent thoughts, build logs, and useful references.',
-		href: '/blog/',
-		linkText: 'open notebook',
-	},
 	{
 		label: 'hidden note',
 		title: 'Easter Egg',
@@ -61,6 +57,27 @@ const noteModules = [
 		<Guestbook />
 		<UpdatesPanel />
 	</section>
+
+	{
+		latestPosts.length > 0 && (
+			<section class="section latest-writing" aria-label="Latest writing">
+				<div class="section-heading">
+					<p class="eyebrow">blog/recent posts</p>
+					<h2>Latest writing</h2>
+				</div>
+				<div class="latest-writing-list">
+					{latestPosts.map((post) => (
+						<article class="home-module latest-writing-card">
+							<p class="eyebrow">{formatPostDate(post.data.date)} / {getReadingTime(post.body)}</p>
+							<h3><a href={`/blog/${getPostSlug(post)}/`}>{post.data.title}</a></h3>
+							<p>{post.data.description}</p>
+						</article>
+					))}
+				</div>
+				<p class="module-link"><a href="/blog/">open notebook</a></p>
+			</section>
+		)
+	}
 
 	<section class="section">
 		<div class="section-heading">
