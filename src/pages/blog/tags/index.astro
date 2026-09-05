@@ -6,9 +6,9 @@ const posts = await getPublishedPosts();
 const tags = getTagSummaries(posts);
 ---
 
-<Layout title="Blog Tags" description="Browse blog posts by tag.">
+<Layout title="Writing Tags" description="Browse writing by tag.">
 	<section class="page-header">
-		<p class="eyebrow">blog/tags</p>
+		<p class="eyebrow">writing/tags</p>
 		<h1>Tag index.</h1>
 		<p>A small index for browsing notes by topic.</p>
 	</section>
@@ -26,13 +26,11 @@ const tags = getTagSummaries(posts);
 				</div>
 			) : (
 				<div class="empty-state">
-					<p class="eyebrow">no tags</p>
-					<h2>No tags yet.</h2>
-					<p>Add tags to Markdown frontmatter in <code>src/content/blog/</code>.</p>
+					<p>No published tags yet.</p>
 				</div>
 			)
 		}
 	</section>
 
-	<p class="post-back"><a href="/blog/">back to blog</a></p>
+	<p class="post-back"><a href="/blog/">back to writing</a></p>
 </Layout>

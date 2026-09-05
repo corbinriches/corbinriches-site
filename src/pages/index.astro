@@ -1,149 +1,81 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import AsciiPortrait from '../components/AsciiPortrait.astro';
+import Portrait from '../components/Portrait.astro';
+import portrait from '../assets/portrait.webp?url';
 import CoinToss from '../components/CoinToss.astro';
-import Guestbook from '../components/Guestbook.astro';
-import NowPanel from '../components/NowPanel.astro';
 import ProjectCard from '../components/ProjectCard.astro';
-import UpdatesPanel from '../components/UpdatesPanel.astro';
 import projectsData from '../data/projects.json';
 import { formatPostDate, getPostSlug, getPublishedPosts, getReadingTime } from '../utils/blog';
-
-const featuredProjects = (projectsData.projects ?? [])
-	.filter((project) => project.featured)
-	.slice(0, 4);
-
+const featuredProjects = projectsData.projects.filter((project) => project.featured);
 const latestPosts = (await getPublishedPosts()).slice(0, 3);
-
-const noteModules = [
-	{
-		label: 'hidden note',
-		title: 'Easter Egg',
-		body: 'A reserved panel for a hidden note, keyboard thing, or small personal artifact. Nothing to see here yet.',
-	},
-	{
-		label: 'ascii scraps',
-		title: 'Full ASCII portrait',
-		body: 'A larger version can live on a simple /ascii page later. The homepage uses the smaller hero file.',
-	},
-];
 ---
 
 <Layout title="Corbin Riches">
 	<section class="home-board">
 		<div class="hero">
-			<p class="eyebrow">personal homepage / digital portfolio</p>
 			<h1>Corbin Riches</h1>
-			<p class="hero-subtitle">Engineering Physics / Photonics / Cryogenics / Simulation</p>
-			<p class="hero-copy">
-				I am an Engineering Physics student building a portfolio around photonics, quantum
-				dots, cryogenic systems, scientific computing, simulation, and technical writing.
-				This site is a home base for projects, notes, experiments, and the occasional
-				carefully organized deep dive.
-			</p>
+			<p class="hero-role">MASc Student @ Queen's University</p>
+			<p class="hero-subtitle">Photonics · Quantum Sensing · Cryogenics</p>
+			<p class="hero-supervision">MASc research with Dr. James Fraser and Dr. Joe Bramante</p>
+		</div>
+		<Portrait src={portrait} />
+		<div class="hero-introduction">
+			<p class="hero-copy">I am pursuing my MASc at Queen's University, working on dark-photon detection through photonics, quantum sensing, and cryogenic experimental systems. I am a Canadian engineering physicist from a small town in Northwestern Ontario, drawn to the challenge of making difficult-to-observe physics measurable. This site is home to my projects, notes, experiments, and writing about whatever has me curious.</p>
 			<div class="hero-actions" aria-label="Primary links">
 				<a class="button primary" href="/projects/">projects</a>
-				<a class="button" href="/blog/">notes</a>
+				<a class="button" href="/blog/">writing</a>
 				<a class="button" href="/contact/">contact</a>
 			</div>
 		</div>
-
-		<AsciiPortrait />
 	</section>
-
-	<section class="section module-grid personal-widgets" aria-label="Personal homepage widgets">
-		<NowPanel />
-		<CoinToss />
-		<Guestbook />
-		<UpdatesPanel />
-	</section>
-
-	{
-		latestPosts.length > 0 && (
-			<section class="section latest-writing" aria-label="Latest writing">
-				<div class="section-heading">
-					<p class="eyebrow">blog/recent posts</p>
-					<h2>Latest writing</h2>
-				</div>
-				<div class="latest-writing-list">
-					{latestPosts.map((post) => (
-						<article class="home-module latest-writing-card">
-							<p class="eyebrow">{formatPostDate(post.data.date)} / {getReadingTime(post.body)}</p>
-							<h3><a href={`/blog/${getPostSlug(post)}/`}>{post.data.title}</a></h3>
-							<p>{post.data.description}</p>
-						</article>
-					))}
-				</div>
-				<p class="module-link"><a href="/blog/">open notebook</a></p>
-			</section>
-		)
-	}
 
 	<section class="section">
 		<div class="section-heading">
 			<p class="eyebrow">portfolio/projects</p>
-			<h2>Things to expand</h2>
+			<h2>Selected projects</h2>
 		</div>
 		<div class="card-grid">
-			{
-				featuredProjects.map((project) => (
-					<ProjectCard
-						title={project.title}
-						description={project.summary}
-						tags={project.tags}
-						status={project.status}
-						type={project.type}
-						href={`/projects/#project-${project.slug}`}
-					/>
-				))
-			}
+			{featuredProjects.map((project) => (
+				<ProjectCard
+					title={project.title}
+					description={project.summary}
+					tags={project.tags}
+					type={project.type}
+					href={`/projects/#project-${project.slug}`}
+				/>
+			))}
 		</div>
 	</section>
 
-	<section class="section">
-		<div class="section-heading">
-			<p class="eyebrow">homepage modules</p>
-			<h2>Loose ends</h2>
-		</div>
-		<div class="module-grid">
-			{
-				noteModules.map((module) => (
-					<article class="home-module">
-						<p class="eyebrow">{module.label}</p>
-						<h3>{module.title}</h3>
-						<p>{module.body}</p>
-						{module.href && (
-							<a class="module-link" href={module.href}>
-								{module.linkText}
-							</a>
-						)}
+	{latestPosts.length > 0 && (
+		<section class="section latest-writing" aria-label="Latest writing">
+			<div class="section-heading">
+				<p class="eyebrow">notebook/recent</p>
+				<h2>Latest writing</h2>
+			</div>
+			<div class="latest-writing-list">
+				{latestPosts.map((post) => (
+					<article class="home-module latest-writing-card">
+						<p class="eyebrow">{formatPostDate(post.data.date)} / {getReadingTime(post.body)}</p>
+						<h3><a href={`/blog/${getPostSlug(post)}/`}>{post.data.title}</a></h3>
+						<p>{post.data.description}</p>
 					</article>
-				))
-			}
-		</div>
-	</section>
-
-	<section class="section two-column">
-		<div>
-			<p class="eyebrow">now</p>
-			<h2>Currently working on</h2>
-			<p>
-				Building out this website, refining project writeups, and keeping a sharper record of
-				simulation work, lab interests, useful books, and technical notes.
-			</p>
-		</div>
-		<div class="terminal-card" aria-label="Current focus list">
-			<p><span>01</span> Quantum dot modeling notes</p>
-			<p><span>02</span> Portfolio project summaries</p>
-			<p><span>03</span> Reading list and bookshelf entries</p>
-		</div>
-	</section>
+				))}
+			</div>
+			<p class="module-link"><a href="/blog/">open notebook</a></p>
+		</section>
+	)}
 
 	<section class="section link-panel" aria-label="Site map">
 		<a href="/about/">About</a>
 		<a href="/projects/">Projects</a>
-		<a href="/blog/">Blog</a>
-		<a href="/bookshelf/">Bookshelf</a>
+		<a href="/blog/">Writing</a>
+		<a href="/bookshelf/">Reading</a>
 		<a href="/contact/">Contact</a>
 	</section>
+
+	<details class="section experiment-drawer">
+		<summary>coin_toss.exe — a small experiment</summary>
+		<CoinToss />
+	</details>
 </Layout>

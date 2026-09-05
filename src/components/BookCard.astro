@@ -1,0 +1,48 @@
+---
+import type { Book } from '../data/reading';
+
+interface Props {
+	book: Book;
+}
+
+const { book } = Astro.props;
+---
+
+<article class="book-card">
+	<p class="eyebrow">book</p>
+	<h4>{book.title}</h4>
+	<p class="book-author">{book.author}</p>
+	{book.series && (
+		<p class="book-detail">
+			{book.series}{book.seriesNumber != null && ` · Book ${book.seriesNumber}`}
+		</p>
+	)}
+	{book.year != null && <p class="book-detail">{book.year}</p>}
+</article>
+
+<style>
+	.book-card {
+		display: flex;
+		min-width: 0;
+		flex-direction: column;
+		gap: 0.55rem;
+		border: 1px dashed var(--line);
+		background: var(--panel);
+		padding: 0.85rem;
+		overflow-wrap: anywhere;
+	}
+
+	.book-author {
+		color: var(--text);
+		font-size: 0.86rem;
+	}
+
+	.book-author::before {
+		content: 'by ';
+		color: var(--dim);
+	}
+
+	.book-detail {
+		font-size: 0.86rem;
+	}
+</style>

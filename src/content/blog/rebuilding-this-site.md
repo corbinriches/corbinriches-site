@@ -6,7 +6,7 @@ tags:
   - website
   - portfolio
   - astro
-draft: false
+draft: true
 asciiHeader: "[ corbinriches.com // rebuild log ]"
 ---
 

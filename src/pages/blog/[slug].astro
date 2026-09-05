@@ -20,7 +20,7 @@ const formattedDate = formatPostDate(post.data.date);
 <Layout title={post.data.title} description={post.data.description}>
 	<article class="blog-post">
 		<header class="page-header blog-post-header">
-			<p class="eyebrow">blog</p>
+			<p class="eyebrow">writing</p>
 			<h1>{post.data.title}</h1>
 			<p>{post.data.description}</p>
 			<div class="post-meta">
@@ -42,6 +42,6 @@ const formattedDate = formatPostDate(post.data.date);
 			<Content />
 		</div>
 
-		<p class="post-back"><a href="/blog/">back to blog</a></p>
+		<p class="post-back"><a href="/blog/">back to writing</a></p>
 	</article>
 </Layout>

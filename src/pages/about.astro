@@ -2,42 +2,116 @@
 import Layout from '../layouts/Layout.astro';
 ---
 
-<Layout
-	title="About"
-	description="About Corbin Riches, an Engineering Physics student interested in photonics, cryogenics, simulation, and technical writing."
->
+<Layout title="About" description="Corbin Riches holds a BASc in Engineering Physics from Queen's University and is pursuing his MASc there, researching dark-photon detection.">
 	<section class="page-header">
 		<p class="eyebrow">about</p>
-		<h1>Engineering Physics, with a bias toward useful systems.</h1>
-		<p>
-			I am an Engineering Physics student interested in the places where theory, hardware,
-			and computation start talking to each other.
-		</p>
+		<h1>Making abstract physics measurable.</h1>
+		<p>I hold a BASc in Engineering Physics from Queen's University and am currently pursuing my MASc there. My interests lie in problems that bring together theory, computation, and experimental hardware.</p>
 	</section>
 
-	<section class="section two-column">
+	<section class="section two-column about-columns">
 		<div>
-			<h2>Focus Areas</h2>
-			<p>
-				My current interests include photonics, quantum dots, cryogenics, detector systems,
-				scientific computing, and simulation. I like problems where the math matters, the
-				measurements are real, and the final explanation has to be clear enough to use.
-			</p>
+			<h2>Research</h2>
+			<p>My MASc research is part of the CATCHY experiment, exploring quantum-enhanced approaches to dark-matter detection. My work brings together optical excitation, quantum sensing, and cryogenic experimental hardware. My research is supervised by Dr. James Fraser and Dr. Joe Bramante.</p>
 		</div>
-		<div class="terminal-card">
-			<p><span>&gt;</span> photonics and semiconductor devices</p>
-			<p><span>&gt;</span> low-temperature systems</p>
-			<p><span>&gt;</span> numerical modeling and visualization</p>
-			<p><span>&gt;</span> technical writing and documentation</p>
+		<div class="terminal-card" aria-label="Research areas">
+			<p><span>&gt;</span> photonics &amp; coherent optics</p>
+			<p><span>&gt;</span> dark matter &amp; quantum sensing</p>
+			<p><span>&gt;</span> cryogenic parahydrogen systems</p>
 		</div>
 	</section>
 
-	<section class="section">
-		<h2>What This Site Is For</h2>
-		<p>
-			This is a place to collect project writeups, notes, reading, and contact information
-			without making the whole thing heavier than it needs to be. The goal is a readable
-			digital portfolio that can grow as the work gets more specific.
-		</p>
+	<section class="section two-column about-columns">
+		<div>
+			<h2>Background</h2>
+			<p>I grew up in a small town in Northwestern Ontario and came to Queen's to study Engineering Physics. What increasingly drew me toward experimental physics was the possibility of making very abstract ideas measurable — moving from fundamental physics, through experiments and instrumentation, toward techniques and devices that can do something useful.</p>
+		</div>
+		<div class="terminal-card credential-card" aria-label="Education">
+			<dl class="credentials">
+				<div class="credential-row">
+					<dt>MASc</dt>
+					<dd class="credential-program">Engineering Physics</dd>
+					<dd class="credential-university">Queen's University</dd>
+					<dd class="credential-meta">Expected 2028</dd>
+				</div>
+				<div class="credential-row">
+					<dt>BASc</dt>
+					<dd class="credential-program">Engineering Physics</dd>
+					<dd class="credential-university">Queen's University</dd>
+					<dd class="credential-meta">2026</dd>
+				</div>
+			</dl>
+		</div>
 	</section>
 </Layout>
+
+<style>
+	.about-columns {
+		grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+	}
+
+	.credential-card {
+		container-type: inline-size;
+	}
+
+	.credentials {
+		margin: 0;
+		font-size: 0.9rem;
+	}
+
+	.credential-row {
+		display: grid;
+		grid-template-columns: 4ch minmax(0, 1fr);
+		grid-template-areas: 'degree program' '. university' '. metadata';
+		gap: 0.2rem 0.65rem;
+		align-items: baseline;
+		padding: 0.4rem 0;
+	}
+
+	.credential-row + .credential-row {
+		border-top: 1px dashed var(--line);
+	}
+
+	.credential-row dt {
+		grid-area: degree;
+		font-weight: 700;
+	}
+
+	.credential-row dd {
+		margin: 0;
+	}
+
+	.credential-program {
+		grid-area: program;
+	}
+
+	.credential-university {
+		grid-area: university;
+		white-space: nowrap;
+	}
+
+	.credential-meta {
+		grid-area: metadata;
+		color: var(--muted);
+		white-space: nowrap;
+	}
+
+	@container (min-width: 560px) {
+		.credential-row {
+			grid-template-columns: 4ch minmax(19ch, 1fr) 20ch 15ch;
+			grid-template-areas: 'degree program university metadata';
+		}
+
+		.credential-university::before,
+		.credential-meta::before {
+			content: '· ';
+			color: var(--dim);
+		}
+	}
+
+	@media (max-width: 780px) {
+		.about-columns {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+</style>

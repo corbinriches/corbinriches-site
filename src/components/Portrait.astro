@@ -1,0 +1,101 @@
+---
+interface Props {
+	src: string;
+}
+
+const { src } = Astro.props;
+---
+
+<svg class="portrait-filter" width="0" height="0" aria-hidden="true" focusable="false">
+	<filter id="portrait-print-tones" color-interpolation-filters="sRGB">
+		<feComponentTransfer>
+			<feFuncR type="table" tableValues="0.10 0.20 0.32 0.44 0.56 0.68 0.79 0.89 0.96" />
+			<feFuncG type="table" tableValues="0.10 0.20 0.32 0.44 0.56 0.68 0.79 0.89 0.96" />
+			<feFuncB type="table" tableValues="0.10 0.20 0.32 0.44 0.56 0.68 0.79 0.89 0.96" />
+		</feComponentTransfer>
+	</filter>
+</svg>
+
+<figure class="photo-portrait">
+	<img src={src} alt="Corbin Riches" width="300" height="300" loading="eager" />
+</figure>
+
+<style>
+	.portrait-filter {
+		position: absolute;
+		pointer-events: none;
+	}
+
+	.photo-portrait {
+		--portrait-paper: var(--panel);
+		--portrait-ink: #211f1a;
+		position: relative;
+		isolation: isolate;
+		margin: -0.65rem 0 0;
+		width: 100%;
+		max-width: 380px;
+		aspect-ratio: 1.04;
+		grid-column: 2;
+		grid-row: 1 / span 2;
+		align-self: start;
+		justify-self: end;
+		overflow: hidden;
+		background: var(--portrait-paper);
+		mask-image:
+			linear-gradient(to bottom, transparent, #000 6%, #000 62%, transparent 98%),
+			radial-gradient(ellipse 52% 64% at 50% 42%, #000 48%, rgb(0 0 0 / 0.94) 68%, transparent 100%);
+		mask-composite: intersect;
+	}
+
+	.photo-portrait img {
+		position: absolute;
+		top: -4%;
+		left: -14%;
+		display: block;
+		width: 128%;
+		height: 128%;
+		object-fit: cover;
+		object-position: center 24%;
+		filter: grayscale(1) contrast(1.1) brightness(1.08) url(#portrait-print-tones);
+		mix-blend-mode: multiply;
+	}
+
+	/* Map the grayscale photograph into paper highlights and ink shadows. */
+	.photo-portrait::before,
+	.photo-portrait::after {
+		position: absolute;
+		inset: 0;
+		content: '';
+		pointer-events: none;
+	}
+
+	.photo-portrait::before {
+		/* A small, feathered lift on the viewer-right cheek balances the source lighting. */
+		background:
+			radial-gradient(ellipse 17% 23% at 63% 43%, rgb(125 113 92 / 0.2), transparent 100%),
+			var(--portrait-ink);
+		mix-blend-mode: screen;
+	}
+
+	.photo-portrait::after {
+		background: radial-gradient(var(--portrait-ink) 0.65px, transparent 0.95px);
+		background-size: 2.5px 2.5px;
+		mix-blend-mode: multiply;
+		opacity: 0.28;
+	}
+
+	:global(html[data-theme='dark']) .photo-portrait {
+		--portrait-paper: #b5a17f;
+		--portrait-ink: #171612;
+	}
+
+	@media (max-width: 880px) {
+		.photo-portrait {
+			grid-column: auto;
+			grid-row: auto;
+			max-width: 320px;
+			justify-self: start;
+			margin-top: 1rem;
+		}
+	}
+</style>

@@ -25,7 +25,7 @@ when it is stable.
 Do not commit `node_modules`, secrets, API keys, or private `.env` files. Content updates
 usually happen in `src/data/` for JSON-driven pages or `src/content/` for Markdown posts.
 
-## Blog Posts
+## Writing
 
 Blog posts live in `src/content/blog/` as Markdown files. The blog index, tag pages, and
 homepage latest-writing module are generated from those files.
@@ -63,30 +63,54 @@ Tags are plain text strings. Tag pages are generated automatically at `/blog/tag
 Preview locally with `npm.cmd run dev`, then make sure the static build passes with
 `npm.cmd run build`.
 
-## Now Panel
+## Portrait
 
-Update the homepage Now panel by editing `src/data/now.json`.
+The homepage uses `src/assets/portrait.webp`, an unchanged copy of the supplied
+headshot. It is imported as a URL and served without image processing. The crop,
+grayscale/contrast filter, duotone blend layers, print texture, and edge fades are
+defined in `Portrait.astro` using CSS. An inline SVG filter reduces the tonal range
+in the browser. Adjust `--portrait-paper` and `--portrait-ink` there for each theme.
+The portrait aligns with the identity block on desktop and sits before the
+introduction on mobile. The original ASCII art and component remain in the repository.
 
-## Bookshelf
+## Reading
 
-Bookshelf entries live in `src/data/bookshelf.json`.
+The navigation says Reading; its existing URL remains `/bookshelf/`.
+Add or edit personal books only in `src/data/reading.ts`. Each entry requires
+`title`, `author`, and `status` (`current` or `finished`). `series`, `seriesNumber`,
+and publication `year` are optional. A short editing guide and a commented example
+are at the top of the data source. Only list books actually being read or finished.
 
-Add or edit items in the `entries` array. Each item can use:
+The page groups books under Currently Reading and Recently Finished, preserving
+their order in the data file and hiding empty groups. All book markup and
+card-specific styles live in `src/components/BookCard.astro`; no page markup needs
+to change when adding a book. Paper notes remain separate.
 
-```json
-{
-	"title": "Book or paper title",
-	"creator": "Author, host, or source",
-	"type": "book, textbook, audiobook, podcast, paper, notes",
-	"status": "current, reference, queue, or archive",
-	"notes": "Short shelf note.",
-	"tags": ["photonics", "simulation"],
-	"year": 2026,
-	"link": "https://optional-link.example"
-}
-```
+Paper notes live in `src/data/paper-notes.json`. Its `title` sets the section name.
+The archive starts empty. Each entry requires:
 
-The `status` field controls the page grouping.
+- `slug`: unique lowercase words separated by hyphens, used for a permanent anchor
+- `title`, `authors` (array), `citation`, and `link` (HTTP/HTTPS source URL)
+- `date`: date of the note, in YYYY-MM-DD format
+- `summary`: what the paper is about
+- `interest`: why it interested you
+- `idea`: the important idea explained in your own words
+- `draft`: defaults to true; set false only when ready to publish
+
+Published notes appear newest first at `/bookshelf/#paper-notes`, with individual
+links at `/bookshelf/#paper-SLUG`. Validation runs during the build. Write short
+original notes; do not reproduce papers or generate sample entries.
+
+## Hidden components and writing
+
+The local guestbook is unmounted and its demo entries have been removed. It must
+have shared persistence before being restored publicly. The Now and newsletter
+components have been removed. The coin toss is at the bottom of the homepage,
+inside a collapsed experiment panel.
+
+Both starter articles are marked as drafts and excluded from all public routes,
+lists, and tags. Publish only real writing. Navigation uses Writing while retaining
+the existing `/blog/` URLs.
 
 ## Projects
 

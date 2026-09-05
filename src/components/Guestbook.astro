@@ -47,11 +47,7 @@ import { kindnessMap } from '../data/kindnessMap.js';
 		const kindnessEntries = Object.entries(kindnessMap).sort(
 			([firstWord], [secondWord]) => secondWord.length - firstWord.length,
 		);
-		const starterEntries = [
-			{ name: 'site', message: 'guestbook initialized. please sign the local log.', date: 'demo-01' },
-			{ name: 'future visitor', message: 'cool homepage. very 2001 in here.', date: 'demo-02' },
-			{ name: 'lab terminal', message: 'status: readable / static / no server attached.', date: 'demo-03' },
-		];
+		const starterEntries = [];
 
 		const escapeRegExp = (word) => word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 

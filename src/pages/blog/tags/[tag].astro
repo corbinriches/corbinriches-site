@@ -27,9 +27,9 @@ export async function getStaticPaths() {
 const { tag, posts } = Astro.props;
 ---
 
-<Layout title={`Blog Tag: ${tag.tag}`} description={`Blog posts tagged ${tag.tag}.`}>
+<Layout title={`Writing Tag: ${tag.tag}`} description={`Writing tagged ${tag.tag}.`}>
 	<section class="page-header">
-		<p class="eyebrow">blog/tags</p>
+		<p class="eyebrow">writing/tags</p>
 		<h1>{tag.tag}</h1>
 		<p>
 			{posts.length} {posts.length === 1 ? 'post' : 'posts'} filed under this tag.

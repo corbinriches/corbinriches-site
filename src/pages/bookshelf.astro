@@ -1,132 +1,69 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import bookshelf from '../data/bookshelf.json';
+import BookCard from '../components/BookCard.astro';
+import { books } from '../data/reading';
+import { paperArchive, publishedPaperNotes } from '../utils/reading';
+import { formatPostDate } from '../utils/blog';
 
-const statusGroups = [
-	{
-		title: 'currently reading / listening',
-		statuses: ['current', 'currently reading', 'currently listening', 'currently reading/listening'],
-	},
-	{
-		title: 'reference / textbooks',
-		statuses: ['reference', 'textbook', 'textbooks', 'reference/textbooks'],
-	},
-	{
-		title: 'queue',
-		statuses: ['queue', 'to read', 'next'],
-	},
-	{
-		title: 'archive',
-		statuses: ['archive', 'finished', 'done'],
-	},
-];
-
-const entries = bookshelf.entries ?? [];
-
-const normalize = (value = '') => value.toString().trim().toLowerCase();
-const matchesGroup = (entry, group) => group.statuses.includes(normalize(entry.status));
-const matchedEntries = new Set();
-
-const groupedShelves = statusGroups
-	.map((group) => {
-		const groupEntries = entries.filter((entry) => matchesGroup(entry, group));
-		groupEntries.forEach((entry) => matchedEntries.add(entry));
-
-		return {
-			...group,
-			entries: groupEntries,
-		};
-	})
-	.filter((group) => group.entries.length > 0);
-
-const uncategorized = entries.filter((entry) => !matchedEntries.has(entry));
-
-if (uncategorized.length > 0) {
-	groupedShelves.push({
-		title: 'uncategorized',
-		statuses: [],
-		entries: uncategorized,
-	});
-}
-
-const hasTags = (entry) => Array.isArray(entry.tags) && entry.tags.length > 0;
-const hasMeta = (entry) => Boolean(entry.year || entry.link);
-const isExternalLink = (link) => typeof link === 'string' && link.startsWith('http');
+const shelves = [
+	{ title: 'Currently Reading', status: 'current' },
+	{ title: 'Recently Finished', status: 'finished' },
+].map((group) => ({
+	...group,
+	entries: books.filter((book) => book.status === group.status),
+})).filter((group) => group.entries.length > 0);
 ---
 
-<Layout title="Bookshelf" description="Books and references Corbin Riches is reading or recommending.">
+<Layout title="Reading" description="Personal reading and paper notes from Corbin Riches.">
 	<section class="page-header">
-		<p class="eyebrow">bookshelf</p>
-		<h1>Reading list, references, and future notes.</h1>
-		<p>
-			A simple shelf for books, textbooks, audiobooks, podcasts, papers, and references that
-			shape the work. The entries are kept in a small JSON file so this page can stay easy to
-			update.
-		</p>
+		<p class="eyebrow">reading</p>
+		<h1>Books, papers, and notes.</h1>
+		<nav class="blog-tag-nav" aria-label="Reading sections">
+			<a href="#bookshelf">Personal reading</a> · <a href="#paper-notes">{paperArchive.title}</a>
+		</nav>
 	</section>
 
-	<section class="section bookshelf-groups" aria-label="Bookshelf entries">
-		{
-			groupedShelves.map((group) => (
-				<div class="bookshelf-group">
-					<div class="bookshelf-group-header">
-						<h2>{group.title}</h2>
-						<p class="bookshelf-count">
-							{group.entries.length} {group.entries.length === 1 ? 'entry' : 'entries'}
+	<section class="section bookshelf-groups" id="bookshelf" aria-labelledby="bookshelf-heading">
+		<h2 id="bookshelf-heading">Personal reading</h2>
+		{shelves.map((group) => (
+			<div class="bookshelf-group">
+				<div class="bookshelf-group-header">
+					<h3>{group.title}</h3>
+					<p class="bookshelf-count">{group.entries.length} {group.entries.length === 1 ? 'book' : 'books'}</p>
+				</div>
+				<div class="bookshelf-card-grid">
+					{group.entries.map((book) => <BookCard book={book} />)}
+				</div>
+			</div>
+		))}
+		{shelves.length === 0 && <p>No books listed.</p>}
+	</section>
+
+	<section class="section" id="paper-notes" aria-labelledby="paper-notes-heading">
+		<div class="section-heading">
+			<p class="eyebrow">papers/archive</p>
+			<h2 id="paper-notes-heading">{paperArchive.title}</h2>
+		</div>
+		{publishedPaperNotes.length > 0 ? (
+			<div class="post-list">
+				{publishedPaperNotes.map((note) => (
+					<article class="post-card paper-note" id={`paper-${note.slug}`}>
+						<p class="eyebrow">
+							<a href={`#paper-${note.slug}`} aria-label={`Link to note on ${note.title}`}>
+								<time datetime={note.date.toISOString()}>{formatPostDate(note.date)}</time>
+							</a>
 						</p>
-					</div>
-
-					<div class="bookshelf-card-grid">
-						{group.entries.map((entry) => (
-							<article class="bookshelf-card">
-								<div class="bookshelf-card-top">
-									<p class="eyebrow">{entry.type || 'item'}</p>
-									{entry.status && <span class="bookshelf-status">{entry.status}</span>}
-								</div>
-
-								<h3>{entry.title || 'Untitled shelf item'}</h3>
-
-								{entry.creator && <p class="bookshelf-creator">{entry.creator}</p>}
-
-								{entry.notes && <p class="bookshelf-notes">{entry.notes}</p>}
-
-								{hasMeta(entry) && (
-									<div class="bookshelf-meta">
-										{entry.year && <span>{entry.year}</span>}
-										{entry.link && (
-											<a
-												href={entry.link}
-												target={isExternalLink(entry.link) ? '_blank' : undefined}
-												rel={isExternalLink(entry.link) ? 'noreferrer' : undefined}
-											>
-												link
-											</a>
-										)}
-									</div>
-								)}
-
-								{hasTags(entry) && (
-									<ul class="tag-list" aria-label={`${entry.title || 'Shelf item'} tags`}>
-										{entry.tags.map((tag) => (
-											<li>{tag}</li>
-										))}
-									</ul>
-								)}
-							</article>
-						))}
-					</div>
-				</div>
-			))
-		}
-
-		{
-			groupedShelves.length === 0 && (
-				<div class="empty-state">
-					<p class="eyebrow">empty shelf</p>
-					<h2>No bookshelf entries yet.</h2>
-					<p>Add entries in <code>src/data/bookshelf.json</code>.</p>
-				</div>
-			)
-		}
+						<h3><a href={note.link}>{note.title}</a></h3>
+						<p class="bookshelf-creator">{note.authors.join(', ')}</p>
+						<p class="bookshelf-notes">{note.citation}</p>
+						<dl class="paper-note-body">
+							<div><dt>About the paper</dt><dd>{note.summary}</dd></div>
+							<div><dt>Why it caught my attention</dt><dd>{note.interest}</dd></div>
+							<div><dt>The idea in my own words</dt><dd>{note.idea}</dd></div>
+						</dl>
+					</article>
+				))}
+			</div>
+		) : <p>No published paper notes yet.</p>}
 	</section>
 </Layout>
