@@ -31,7 +31,7 @@ const { src } = Astro.props;
 		--portrait-ink: #211f1a;
 		position: relative;
 		isolation: isolate;
-		margin: -0.65rem 0 0;
+		margin: 4rem 0 0;
 		width: 100%;
 		max-width: 380px;
 		aspect-ratio: 1.04;
@@ -42,20 +42,20 @@ const { src } = Astro.props;
 		overflow: hidden;
 		background: var(--portrait-paper);
 		mask-image:
-			linear-gradient(to bottom, transparent, #000 6%, #000 62%, transparent 98%),
-			radial-gradient(ellipse 52% 64% at 50% 42%, #000 48%, rgb(0 0 0 / 0.94) 68%, transparent 100%);
+			linear-gradient(to bottom, #000 85%, transparent 100%),
+			linear-gradient(to right, transparent, #000 1.5%, #000 98.5%, transparent);
 		mask-composite: intersect;
 	}
 
 	.photo-portrait img {
 		position: absolute;
-		top: -4%;
-		left: -14%;
+		top: 0;
+		left: -10%;
 		display: block;
-		width: 128%;
-		height: 128%;
+		width: 120%;
+		height: 120%;
 		object-fit: cover;
-		object-position: center 24%;
+		object-position: center top;
 		filter: grayscale(1) contrast(1.1) brightness(1.08) url(#portrait-print-tones);
 		mix-blend-mode: multiply;
 	}
@@ -78,10 +78,13 @@ const { src } = Astro.props;
 	}
 
 	.photo-portrait::after {
-		background: radial-gradient(var(--portrait-ink) 0.65px, transparent 0.95px);
-		background-size: 2.5px 2.5px;
+		background:
+			radial-gradient(var(--portrait-ink) 0.7px, transparent 1px),
+			radial-gradient(var(--portrait-ink) 0.35px, transparent 0.65px);
+		background-size: 2.5px 2.5px, 4.1px 4.7px;
+		background-position: 0 0, 1px 1.5px;
 		mix-blend-mode: multiply;
-		opacity: 0.28;
+		opacity: 0.36;
 	}
 
 	:global(html[data-theme='dark']) .photo-portrait {
